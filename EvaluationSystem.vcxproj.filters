@@ -45,6 +45,9 @@
     <ClInclude Include="ICTCLAS50.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Markup.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EvaluationSystem.cpp">
@@ -57,6 +60,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Rouge.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Markup.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

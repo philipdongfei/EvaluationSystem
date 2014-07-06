@@ -13,6 +13,9 @@
 #include <codecvt>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+#include <fstream>
+
 
 #ifndef OS_LINUX
 #include <Windows.h>
@@ -27,6 +30,15 @@ std::string ws2s(const std::wstring& wstr);
 #define new DEBUG_NEW
 #endif
 
+
+bool bExitThread = false;
+
+UINT   ThreadBulk(LPVOID para)
+{
+	CEvaluationSystemDlg *pDlg = (CEvaluationSystemDlg*)para;
+	pDlg->ProcessBulk();
+	return 0;
+}
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
@@ -68,6 +80,22 @@ CEvaluationSystemDlg::CEvaluationSystemDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CEvaluationSystemDlg::IDD, pParent)
 	, m_strScore(_T(""))
 	, m_bSegment(TRUE)
+	, m_strScoreOR1(_T(""))
+	, m_strScoreSR1(_T(""))
+	, m_strScoreOR2(_T(""))
+	, m_strScoreSR2(_T(""))
+	, m_strScoreOR3(_T(""))
+	, m_strScoreSR3(_T(""))
+	, m_strScoreORL(_T(""))
+	, m_strScoreSRL(_T(""))
+	, m_strScoreORNPL(_T(""))
+	, m_strScoreSRNPL(_T(""))
+	, m_strScoreORW(_T(""))
+	, m_strScoreSRW(_T(""))
+	, m_strScoreORS(_T(""))
+	, m_strScoreSRS(_T(""))
+	, m_strScoreORSU(_T(""))
+	, m_strScoreSRSU(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -81,6 +109,22 @@ void CEvaluationSystemDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_STATIC_SCORCE, m_strScore);
 	DDX_Control(pDX, IDC_RICHEDIT_REFERENCE, m_credtReference);
 	DDX_Check(pDX, IDC_CHECK_SEGMENTATION, m_bSegment);
+	DDX_Text(pDX, IDC_SC_OR1, m_strScoreOR1);
+	DDX_Text(pDX, IDC_SC_SR1, m_strScoreSR1);
+	DDX_Text(pDX, IDC_SC_OR2, m_strScoreOR2);
+	DDX_Text(pDX, IDC_SC_SR2, m_strScoreSR2);
+	DDX_Text(pDX, IDC_SC_OR3, m_strScoreOR3);
+	DDX_Text(pDX, IDC_SC_SR3, m_strScoreSR3);
+	DDX_Text(pDX, IDC_SC_ORL, m_strScoreORL);
+	DDX_Text(pDX, IDC_SC_SRL, m_strScoreSRL);
+	DDX_Text(pDX, IDC_SC_ORNPL, m_strScoreORNPL);
+	DDX_Text(pDX, IDC_SC_SRNPL, m_strScoreSRNPL);
+	DDX_Text(pDX, IDC_SC_ORW, m_strScoreORW);
+	DDX_Text(pDX, IDC_SC_SRW, m_strScoreSRW);
+	DDX_Text(pDX, IDC_SC_ORS, m_strScoreORS);
+	DDX_Text(pDX, IDC_SC_SRS, m_strScoreSRS);
+	DDX_Text(pDX, IDC_SC_ORSU, m_strScoreORSU);
+	DDX_Text(pDX, IDC_SC_SRSU, m_strScoreSRSU);
 }
 
 BEGIN_MESSAGE_MAP(CEvaluationSystemDlg, CDialogEx)
@@ -89,6 +133,8 @@ BEGIN_MESSAGE_MAP(CEvaluationSystemDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CEvaluationSystemDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_CHECK_SEGMENTATION, &CEvaluationSystemDlg::OnBnClickedCheckSegmentation)
+	ON_BN_CLICKED(ID_BTN_BULK, &CEvaluationSystemDlg::OnBnClickedBtnBulk)
+	ON_BN_CLICKED(IDCANCEL, &CEvaluationSystemDlg::OnBnClickedCancel)
 END_MESSAGE_MAP()
 
 
@@ -137,7 +183,16 @@ BOOL CEvaluationSystemDlg::OnInitDialog()
 	m_cmbType.AddString("ROUGE-3");//2
 	m_cmbType.AddString("ROUGE-L");//3
 	m_cmbType.AddString("Normalized Pariwise LCS");//4
+	m_cmbType.AddString("ROUGE-W");//5
+	m_cmbType.AddString("ROUGE-S");//6
 	m_cmbType.SetCurSel(0);
+
+	for (int nI=0; nI < 8; nI++)
+	{
+		m_dbRaw[nI] = 0.0;
+		m_dbSeg[nI] = 0.0;
+	}
+	m_hThread = NULL;
 	UpdateData(0);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -199,7 +254,7 @@ void CEvaluationSystemDlg::OnBnClickedOk()
 	UpdateData();
 	double dbScore(0.0);
 	int nType = m_cmbType.GetCurSel();
-	char *pBuffer = new char[1024];
+	/*char *pBuffer = new char[1024];
 	int nLineCount = m_credtCandidate.GetLineCount();
 	//m_credtCandidate.GetWindowTextA(pBuffer,1024);
 	m_wstrCandidate.clear();
@@ -256,9 +311,53 @@ void CEvaluationSystemDlg::OnBnClickedOk()
 	 if (m_vecReference.size() == 0)
 	 {
 		  m_vecReference.push_back(m_wstrReference);
-	 }
+	 }*/
+	///segment
+	m_bSegment = TRUE;
+	PretreatmentUI(m_bSegment);
+	ComputeRough(m_bSegment);
+	/////no segment
+	m_bSegment = FALSE;
+	PretreatmentUI(m_bSegment);
+	ComputeRough(m_bSegment);
 
-	switch(nType)
+
+
+
+/*	 m_bSegment = FALSE;
+	 dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,1,m_bSegment);
+	 m_strScoreOR1.Format("%.04f",dbScore);
+	 dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,2,m_bSegment);
+	 m_strScoreOR2.Format("%.04f",dbScore);
+	 dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,3,m_bSegment);
+	 m_strScoreOR3.Format("%.04f",dbScore);
+	 dbScore = m_Rouge.Rouge_L(m_wstrCandidate,m_vecReference,m_bSegment);
+	 m_strScoreORL.Format("%.04f",dbScore);
+	 dbScore = m_Rouge.NormalizedPairwiseLCS(m_wstrCandidate,m_vecReference,m_bSegment);
+	 m_strScoreORNPL.Format("%.04f",dbScore);
+	 dbScore =  m_Rouge.Rouge_W(m_wstrCandidate,m_vecReference,m_bSegment);
+	 m_strScoreORW.Format("%.04f",dbScore);
+	 dbScore = m_Rouge.Rouge_S(m_wstrCandidate,m_vecReference,m_bSegment);
+	 m_strScoreORS.Format("%.04f",dbScore);
+
+
+	  m_bSegment = TRUE;
+	 dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,1,m_bSegment);
+	 m_strScoreSR1.Format("%.04f",dbScore);
+	 dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,2,m_bSegment);
+	 m_strScoreSR2.Format("%.04f",dbScore);
+	 dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,3,m_bSegment);
+	 m_strScoreSR3.Format("%.04f",dbScore);
+	 dbScore = m_Rouge.Rouge_L(m_wstrCandidate,m_vecReference,m_bSegment);
+	 m_strScoreSRL.Format("%.04f",dbScore);
+	 dbScore = m_Rouge.NormalizedPairwiseLCS(m_wstrCandidate,m_vecReference,m_bSegment);
+	 m_strScoreSRNPL.Format("%.04f",dbScore);
+	 dbScore =  m_Rouge.Rouge_W(m_wstrCandidate,m_vecReference,m_bSegment);
+	 m_strScoreSRW.Format("%.04f",dbScore);
+	 dbScore = m_Rouge.Rouge_S(m_wstrCandidate,m_vecReference,m_bSegment);
+	 m_strScoreSRS.Format("%.04f",dbScore);*/
+
+/*	switch(nType)
 	{
 	case 0://rouge-1
 		{
@@ -286,22 +385,32 @@ void CEvaluationSystemDlg::OnBnClickedOk()
 			dbScore = m_Rouge.Rouge_L(m_wstrCandidate,m_vecReference,m_bSegment);
 		}
 		break;
-	case 4:
+	case 4://normalized pairwise
 		{
 			dbScore = m_Rouge.NormalizedPairwiseLCS(m_wstrCandidate,m_vecReference,m_bSegment);
 		}
 		break;
+	case 5://rouge-w
+		{
+			dbScore =  m_Rouge.Rouge_W(m_wstrCandidate,m_vecReference,m_bSegment);
+		}
+		break;
+	case 6://rouge-s
+		{
+			dbScore = m_Rouge.Rouge_S(m_wstrCandidate,m_vecReference,m_bSegment);
+		}
+		break;
 	default:
 		break;
-	}
+	}*/
 
-	if (pBuffer)
+/*	if (pBuffer)
 	{
 		delete []pBuffer;
 		pBuffer = NULL;
-	}
+	}*/
 	m_strScore = (_T(""));
-	m_strScore.Format("Score:%.04f",dbScore);
+//	m_strScore.Format("Score:%.04f",dbScore);
 	UpdateData(0);
 //	CDialogEx::OnOK();
 }
@@ -390,4 +499,480 @@ std::string ws2s(const std::wstring& wstr)
 void CEvaluationSystemDlg::OnBnClickedCheckSegmentation()
 {
 	// TODO: 在此添加控件通知处理程序代码
+}
+
+
+void CEvaluationSystemDlg::OnBnClickedBtnBulk()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	/*	CFileDialog mFileDlg(TRUE, NULL,NULL, 
+                         OFN_ALLOWMULTISELECT,
+                         	_T("TXT Files (*.XML)|*.XML|All Files (*.*)|*.*||"),
+                         AfxGetMainWnd()); 
+	int NAMEBUF = 1024*1024;
+	mFileDlg.m_ofn.lpstrFile=new TCHAR[NAMEBUF];   // 重新定义 lpstrFile 缓冲大小
+	memset(mFileDlg.m_ofn.lpstrFile,0,NAMEBUF);  // 初始化定义的缓冲 
+	mFileDlg.m_ofn.nMaxFile = NAMEBUF;           // 重定义 nMaxFile 
+    CString pathName,FileName;
+	CString  strXmlFile;
+
+	char CurrentDir[256];
+	memset(CurrentDir,0,256);
+	
+    GetCurrentDirectory(255,CurrentDir);
+   
+    if(mFileDlg.DoModal ()==IDOK)
+    { 
+		SetCurrentDirectory(CurrentDir);
+	
+        POSITION mPos=mFileDlg.GetStartPosition(); 
+        while(mPos!=NULL) 
+        { 
+             pathName=mFileDlg.GetNextPathName(mPos);
+		
+		
+			
+		} 
+	
+    }
+	delete [] mFileDlg.m_ofn.lpstrFile;             // 切记使用完后释放资源  */
+	
+/*	std::ofstream out; 
+	std::string filename;
+	char *pBuffer = new char[256];
+
+	for (int i=1; i<=100; i++)
+	{
+		memset(pBuffer,0,256);
+		sprintf(pBuffer,".\\sample\\r%d.txt",i);
+		out.open(pBuffer,std::ios::binary);
+		out.close();
+		memset(pBuffer,0,256);
+		sprintf(pBuffer,".\\sample\\c%d.txt",i);
+		out.open(pBuffer,std::ios::binary);
+		out <<";" ;
+		out.close();
+
+	}
+	if (pBuffer)
+	{
+		delete []pBuffer;
+		pBuffer = NULL;
+	}*/
+
+
+
+/*	std::ifstream in;
+	std::string filename,strReference,strCandidate,strLine;
+	double nManualScore(0);
+	char *pBuffer = new char [256];
+	for (int i=1; i<=100; i++)
+	{
+		memset(pBuffer,0,256);
+		sprintf(pBuffer,".\\sample\\r%d.txt",i);
+		TRACE(pBuffer);
+		TRACE("\n");
+		in.open(pBuffer,std::ios::binary);
+		while(in >> strLine)
+		{
+			strReference += strLine;
+
+		}
+
+		in.close();
+		in.clear();
+
+		memset(pBuffer,0,256);
+		sprintf(pBuffer,".\\sample\\c%d.txt",i);
+		in.open(pBuffer,std::ios::binary);
+		while(in >> strLine)
+		{
+			if (strLine.at(0) == ';')
+			{
+				nManualScore = atof(strLine.substr(1,strLine.length()-1).c_str());
+				m_strManualScore = strLine.substr(1,strLine.length()-1).c_str();
+				continue;
+			}
+			strCandidate += strLine;
+		}
+		in.close();
+		in.clear();
+		////////////////raw
+		m_bSegment = FALSE;
+		PretreatmentBulk(m_bSegment,strReference,strCandidate);
+		ComputeRough(m_bSegment);
+		////////////segment
+		 m_bSegment = TRUE;
+		 m_wstrCandidate.clear();
+		 m_wstrReference.clear();
+		 m_vecReference.clear();
+		 PretreatmentBulk(m_bSegment,strReference,strCandidate);
+		ComputeRough(m_bSegment);
+
+		
+	
+	}
+
+	m_strScoreOR1.Format("%.02f",m_dbRaw[0]/100*100);
+	m_strScoreOR2.Format("%.02f",m_dbRaw[1]/100*100);
+	m_strScoreOR3.Format("%.02f",m_dbRaw[2]/100*100);
+	m_strScoreORL.Format("%.02f",m_dbRaw[3]/100*100);
+	m_strScoreORNPL.Format("%.02f",m_dbRaw[4]/100*100);
+	m_strScoreORW.Format("%.02f",m_dbRaw[5]/100*100);
+	m_strScoreORS.Format("%.02f",m_dbRaw[6]/100*100);
+	m_strScoreORSU.Format("%.02f",m_dbRaw[7]/100*100);
+	 m_strScoreSR1.Format("%.02f",m_dbSeg[0]/100*100);
+	 m_strScoreSR2.Format("%.02f",m_dbSeg[1]/100*100);
+	 m_strScoreSR3.Format("%.02f",m_dbSeg[2]/100*100);
+	 m_strScoreSRL.Format("%.02f",m_dbSeg[3]/100*100);
+	 m_strScoreSRNPL.Format("%.02f",m_dbSeg[4]/100*100);
+	 m_strScoreSRW.Format("%.02f",m_dbSeg[5]/100*100);
+	 m_strScoreSRS.Format("%.02f",m_dbSeg[6]/100*100);
+	 m_strScoreSRSU.Format("%.02f",m_dbSeg[7]/100*100);
+	if (pBuffer)
+	{
+		delete []pBuffer;
+		pBuffer = NULL;
+	}*/
+
+	m_hThread = AfxBeginThread(ThreadBulk,(LPVOID)this);
+	UpdateData(0);
+	
+}
+
+
+void  CEvaluationSystemDlg::ProcessBulk()
+{
+	std::ifstream in;
+	std::string filename,strReference,strCandidate,strLine;
+	double nManualScore(0);
+	char *pBuffer = new char [256];
+	for (int i=1; i<=100; i++)
+	{
+
+		if (bExitThread)
+		{
+			if (pBuffer)
+			{
+				delete []pBuffer;
+				pBuffer = NULL;
+			}
+			return;
+		}
+		memset(pBuffer,0,256);
+		sprintf(pBuffer,".\\sample\\r%d.txt",i);
+		TRACE(pBuffer);
+		TRACE("\n");
+		in.open(pBuffer,std::ios::binary);
+		while(in >> strLine)
+		{
+			strReference += strLine;
+
+		}
+
+		in.close();
+		in.clear();
+
+		memset(pBuffer,0,256);
+		sprintf(pBuffer,".\\sample\\c%d.txt",i);
+		in.open(pBuffer,std::ios::binary);
+		while(in >> strLine)
+		{
+			if (strLine.at(0) == ';')
+			{
+				nManualScore = atof(strLine.substr(1,strLine.length()-1).c_str());
+				m_strManualScore = strLine.substr(1,strLine.length()-1).c_str();
+				continue;
+			}
+			strCandidate += strLine;
+		}
+		in.close();
+		in.clear();
+		////////////////raw
+		m_bSegment = FALSE;
+		PretreatmentBulk(m_bSegment,strReference,strCandidate);
+		ComputeRough(m_bSegment);
+		////////////segment
+		 m_bSegment = TRUE;
+		 m_wstrCandidate.clear();
+		 m_wstrReference.clear();
+		 m_vecReference.clear();
+		 PretreatmentBulk(m_bSegment,strReference,strCandidate);
+		ComputeRough(m_bSegment);
+
+		
+	
+	}
+
+	m_strScoreOR1.Format("%.02f",m_dbRaw[0]/100*100);
+	m_strScoreOR2.Format("%.02f",m_dbRaw[1]/100*100);
+	m_strScoreOR3.Format("%.02f",m_dbRaw[2]/100*100);
+	m_strScoreORL.Format("%.02f",m_dbRaw[3]/100*100);
+	m_strScoreORNPL.Format("%.02f",m_dbRaw[4]/100*100);
+	m_strScoreORW.Format("%.02f",m_dbRaw[5]/100*100);
+	m_strScoreORS.Format("%.02f",m_dbRaw[6]/100*100);
+	m_strScoreORSU.Format("%.02f",m_dbRaw[7]/100*100);
+	 m_strScoreSR1.Format("%.02f",m_dbSeg[0]/100*100);
+	 m_strScoreSR2.Format("%.02f",m_dbSeg[1]/100*100);
+	 m_strScoreSR3.Format("%.02f",m_dbSeg[2]/100*100);
+	 m_strScoreSRL.Format("%.02f",m_dbSeg[3]/100*100);
+	 m_strScoreSRNPL.Format("%.02f",m_dbSeg[4]/100*100);
+	 m_strScoreSRW.Format("%.02f",m_dbSeg[5]/100*100);
+	 m_strScoreSRS.Format("%.02f",m_dbSeg[6]/100*100);
+	 m_strScoreSRSU.Format("%.02f",m_dbSeg[7]/100*100);
+	if (pBuffer)
+	{
+		delete []pBuffer;
+		pBuffer = NULL;
+	}
+
+	AfxMessageBox("computing finish!");
+}
+
+void   CEvaluationSystemDlg::PretreatmentBulk(BOOL bSegment,std::string strReference, std::string strCandidate)
+{
+	if (bSegment)
+	{
+		char *pBuffer = new char[strReference.length()+1];
+		memset(pBuffer,0,strReference.length()+1);
+		memcpy(pBuffer,strReference.c_str(),strReference.length());
+		if (!SegmentSentence(m_wstrReference,pBuffer))
+			return;
+		
+		delete []pBuffer;
+		pBuffer = NULL;
+		size_t pos(0),pos1(0);
+		while((pos1 = m_wstrReference.find(L"|",pos)) != std::string::npos)
+		{
+			std::wstring t_wstrRef = m_wstrReference.substr(pos,pos1-pos);
+			m_vecReference.push_back(t_wstrRef);
+			if (bSegment)
+				pos = pos1+3;
+			else
+				pos = pos1+1;
+		}
+		if (m_vecReference.size() == 0)
+		{
+			m_vecReference.push_back(m_wstrReference);
+		}
+
+		pBuffer = new char[strCandidate.length()+1];
+		memset(pBuffer,0,strCandidate.length()+1);
+		memcpy(pBuffer,strCandidate.c_str(),strCandidate.length());
+		if (!SegmentSentence(m_wstrCandidate,pBuffer))
+			return;
+		delete []pBuffer;
+		pBuffer = NULL;
+
+	}
+	else
+	{
+		char *pBuffer = new char[strReference.length()+1];
+		memset(pBuffer,0,strReference.length()+1);
+		memcpy(pBuffer,strReference.c_str(),strReference.length());
+		m_wstrReference = ByteToWString(pBuffer);
+		delete []pBuffer;
+		pBuffer = NULL;
+		size_t pos(0),pos1(0);
+		while((pos1 = m_wstrReference.find(L"|",pos)) != std::string::npos)
+		{
+			std::wstring t_wstrRef = m_wstrReference.substr(pos,pos1-pos);
+			m_vecReference.push_back(t_wstrRef);
+			if (bSegment)
+				pos = pos1+3;
+			else
+				pos = pos1+1;
+		}
+		if (m_vecReference.size() == 0)
+		{
+			m_vecReference.push_back(m_wstrReference);
+		}
+
+		pBuffer = new char[strCandidate.length()+1];
+		memset(pBuffer,0,strCandidate.length()+1);
+		memcpy(pBuffer,strCandidate.c_str(),strCandidate.length());
+		m_wstrCandidate = ByteToWString(pBuffer);
+		delete []pBuffer;
+		pBuffer = NULL;
+	}
+}
+
+void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
+{
+	double dbScore(0.0);
+	char   t_Score[8];
+	memset(t_Score,0,sizeof(t_Score));
+
+	if (!m_bSegment)
+	{
+		dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,1,m_bSegment);
+		m_strScoreOR1.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[0]; 
+		dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,2,m_bSegment);
+		m_strScoreOR2.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[1]; 
+		dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,3,m_bSegment);
+		m_strScoreOR3.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[2]; 
+		dbScore = m_Rouge.Rouge_L(m_wstrCandidate,m_vecReference,m_bSegment);
+		m_strScoreORL.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[3]; 
+		dbScore = m_Rouge.NormalizedPairwiseLCS(m_wstrCandidate,m_vecReference,m_bSegment);
+		m_strScoreORNPL.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[4]; 
+		dbScore =  m_Rouge.Rouge_W(m_wstrCandidate,m_vecReference,m_bSegment);
+		m_strScoreORW.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[5]; 
+		dbScore = m_Rouge.Rouge_S(m_wstrCandidate,m_vecReference,m_bSegment);
+		m_strScoreORS.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[6]; 
+	}
+	else {
+
+		dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,1,m_bSegment);
+		m_strScoreSR1.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbSeg[0]; 
+		dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,2,m_bSegment);
+		m_strScoreSR2.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbSeg[1]; 
+		dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,3,m_bSegment);
+		m_strScoreSR3.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbSeg[2]; 
+		dbScore = m_Rouge.Rouge_L(m_wstrCandidate,m_vecReference,m_bSegment);
+		m_strScoreSRL.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbSeg[3]; 
+		dbScore = m_Rouge.NormalizedPairwiseLCS(m_wstrCandidate,m_vecReference,m_bSegment);
+		m_strScoreSRNPL.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbSeg[4]; 
+		dbScore =  m_Rouge.Rouge_W(m_wstrCandidate,m_vecReference,m_bSegment);
+		m_strScoreSRW.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbSeg[5]; 
+		dbScore = m_Rouge.Rouge_S(m_wstrCandidate,m_vecReference,m_bSegment);
+		m_strScoreSRS.Format("%.04f",dbScore);
+		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbSeg[6]; 
+	}
+	
+}
+
+void  CEvaluationSystemDlg::PretreatmentUI(BOOL bSegment)
+{
+//	UpdateData();
+	char *pBuffer = new char[1024];
+	int nLineCount = m_credtCandidate.GetLineCount();
+	//m_credtCandidate.GetWindowTextA(pBuffer,1024);
+	m_wstrCandidate.clear();
+	m_wstrReference.clear();
+	m_vecReference.clear();
+	int nIndex;
+	for(nIndex = 0; nIndex < nLineCount;nIndex++)
+	{
+		memset(pBuffer,0,1024);
+
+		int nLen = m_credtCandidate.GetLine(nIndex,pBuffer,1024);
+		int pp = pBuffer[nLen-1];
+		if (nLen > 0)
+		{
+			if (bSegment)
+			{
+				if (!SegmentSentence(m_wstrCandidate,pBuffer))
+					return;
+			}
+			else {
+				m_wstrCandidate += ByteToWString(pBuffer);
+			}
+		}
+	}
+	nLineCount = m_credtReference.GetLineCount();
+	for(nIndex = 0; nIndex < nLineCount;nIndex++)
+	{
+		memset(pBuffer,0,1024);
+
+		int nLen = m_credtReference.GetLine(nIndex,pBuffer,1024);
+
+		if (nLen > 0)
+		{
+			if (bSegment)
+			{
+				if (!SegmentSentence(m_wstrReference,pBuffer))
+					return;
+			}
+			else {
+				m_wstrReference += ByteToWString(pBuffer);
+			}
+		}
+	}
+	size_t pos(0),pos1(0);
+	while((pos1 = m_wstrReference.find(L"|",pos)) != std::string::npos)
+	{
+		std::wstring t_wstrRef = m_wstrReference.substr(pos,pos1-pos);
+		m_vecReference.push_back(t_wstrRef);
+		if (bSegment)
+			pos = pos1+3;
+		else
+			pos = pos1+1;
+	}
+	if (m_vecReference.size() == 0)
+	{
+		m_vecReference.push_back(m_wstrReference);
+	}
+
+	if (pBuffer)
+	{
+		delete []pBuffer;
+		pBuffer = NULL;
+	}
+}
+
+void CEvaluationSystemDlg::OnBnClickedCancel()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	bExitThread = true;
+
+	while(1)
+	{
+		DWORD result;
+		MSG msg;
+
+		result = MsgWaitForMultipleObjects(1,&(m_hThread->m_hThread),FALSE,INFINITE,QS_ALLINPUT);
+		if (result == WAIT_OBJECT_0)
+		{
+			break;
+		}
+		else
+		{
+			PeekMessage(&msg,NULL,0,0,PM_REMOVE);
+			DispatchMessage(&msg);
+		}
+	}
+
+
+	CDialogEx::OnCancel();
 }
