@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
+#include "Markup.h"
 
 
 #ifndef OS_LINUX
@@ -30,13 +31,14 @@ std::string ws2s(const std::wstring& wstr);
 #define new DEBUG_NEW
 #endif
 
-
+#define WM_FINISH_THREAD       (WM_USER+100) 
 bool bExitThread = false;
 
 UINT   ThreadBulk(LPVOID para)
 {
 	CEvaluationSystemDlg *pDlg = (CEvaluationSystemDlg*)para;
-	pDlg->ProcessBulk();
+	if (pDlg->ProcessBulk())
+		PostMessageA(pDlg->GetSafeHwnd(),WM_FINISH_THREAD,1,0);
 	return 0;
 }
 
@@ -135,6 +137,7 @@ BEGIN_MESSAGE_MAP(CEvaluationSystemDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_SEGMENTATION, &CEvaluationSystemDlg::OnBnClickedCheckSegmentation)
 	ON_BN_CLICKED(ID_BTN_BULK, &CEvaluationSystemDlg::OnBnClickedBtnBulk)
 	ON_BN_CLICKED(IDCANCEL, &CEvaluationSystemDlg::OnBnClickedCancel)
+	ON_MESSAGE( WM_FINISH_THREAD,OnFinishThread)
 END_MESSAGE_MAP()
 
 
@@ -641,12 +644,15 @@ void CEvaluationSystemDlg::OnBnClickedBtnBulk()
 }
 
 
-void  CEvaluationSystemDlg::ProcessBulk()
+bool  CEvaluationSystemDlg::ProcessBulk()
 {
 	std::ifstream in;
 	std::string filename,strReference,strCandidate,strLine;
 	double nManualScore(0);
 	char *pBuffer = new char [256];
+
+	CMarkup  xml;
+	xml.AddElem( "TextSet" );
 	for (int i=1; i<=100; i++)
 	{
 
@@ -657,10 +663,13 @@ void  CEvaluationSystemDlg::ProcessBulk()
 				delete []pBuffer;
 				pBuffer = NULL;
 			}
-			return;
+			return false;
 		}
+
+		xml.AddChildElem( "TEXT" );
+		xml.SetChildAttrib("No",i);
 		memset(pBuffer,0,256);
-		sprintf(pBuffer,".\\sample\\r%d.txt",i);
+		sprintf_s(pBuffer,256,".\\sample\\r%d.txt",i);
 		TRACE(pBuffer);
 		TRACE("\n");
 		in.open(pBuffer,std::ios::binary);
@@ -700,10 +709,61 @@ void  CEvaluationSystemDlg::ProcessBulk()
 		 PretreatmentBulk(m_bSegment,strReference,strCandidate);
 		ComputeRough(m_bSegment);
 
+
+		xml.SetChildAttrib("ManualScore",(int)nManualScore);
+		xml.AddChildElem("ROUGE1");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_strScoreOR1 );
+		xml.AddChildElem( "SEG",m_strScoreSR1 );
+		xml.OutOfElem();
+
+		xml.AddChildElem("ROUGE2");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_strScoreOR2 );
+		xml.AddChildElem( "SEG",m_strScoreSR2 );
+		xml.OutOfElem();
+
+		xml.AddChildElem("ROUGE3");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_strScoreOR3 );
+		xml.AddChildElem( "SEG",m_strScoreSR3 );
+		xml.OutOfElem();
+
+		xml.AddChildElem("ROUGE L");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_strScoreORL );
+		xml.AddChildElem( "SEG",m_strScoreSRL );
+		xml.OutOfElem();
+
+		xml.AddChildElem("ROUGE NPL");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_strScoreORNPL );
+		xml.AddChildElem( "SEG",m_strScoreSRNPL );
+		xml.OutOfElem();
+
+		xml.AddChildElem("ROUGE W");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_strScoreORW );
+		xml.AddChildElem( "SEG",m_strScoreSRW );
+		xml.OutOfElem();
+
+		xml.AddChildElem("ROUGE S");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_strScoreORS );
+		xml.AddChildElem( "SEG",m_strScoreSRS );
+		xml.OutOfElem();
+
+		xml.AddChildElem("ROUGE SU");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_strScoreORSU );
+		xml.AddChildElem( "SEG",m_strScoreSRSU );
+		xml.OutOfElem();
+
+		
 		
 	
 	}
-
+	xml.Save(".\\sample\\result.xml");
 	m_strScoreOR1.Format("%.02f",m_dbRaw[0]/100*100);
 	m_strScoreOR2.Format("%.02f",m_dbRaw[1]/100*100);
 	m_strScoreOR3.Format("%.02f",m_dbRaw[2]/100*100);
@@ -725,8 +785,9 @@ void  CEvaluationSystemDlg::ProcessBulk()
 		delete []pBuffer;
 		pBuffer = NULL;
 	}
-
+	m_hThread = NULL;
 	AfxMessageBox("computing finish!");
+	return true;
 }
 
 void   CEvaluationSystemDlg::PretreatmentBulk(BOOL bSegment,std::string strReference, std::string strCandidate)
@@ -805,7 +866,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 
 	if (!m_bSegment)
 	{
-		dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,1,m_bSegment);
+	/*	dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,1,m_bSegment);
 		m_strScoreOR1.Format("%.04f",dbScore);
 		sprintf(t_Score,"%.0f",(dbScore)*10);
 		if (t_Score == m_strManualScore)
@@ -819,9 +880,31 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		m_strScoreOR3.Format("%.04f",dbScore);
 		sprintf(t_Score,"%.0f",(dbScore)*10);
 		if (t_Score == m_strManualScore)
+			++m_dbRaw[2]; */
+
+
+		m_Rouge.Rouge_N_All(m_wstrCandidate,m_vecReference,m_bSegment);
+		double s1,s2,s3;
+		m_Rouge.GetScroeNAll(s1,s2,s3);
+		m_strScoreOR1.Format("%.04f",s1);
+		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s1)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[0]; 
+		m_strScoreOR2.Format("%.04f",s2);
+		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s2)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[1]; 
+		m_strScoreOR3.Format("%.04f",s3);
+		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s3)*10);
+		if (t_Score == m_strManualScore)
 			++m_dbRaw[2]; 
+
+
+
+
 		dbScore = m_Rouge.Rouge_L(m_wstrCandidate,m_vecReference,m_bSegment);
-		m_strScoreORL.Format("%.04f",dbScore);
+
+	/*	m_strScoreORL.Format("%.04f",dbScore);
 		sprintf(t_Score,"%.0f",(dbScore)*10);
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[3]; 
@@ -830,20 +913,47 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		sprintf(t_Score,"%.0f",(dbScore)*10);
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[4]; 
+		
+
 		dbScore =  m_Rouge.Rouge_W(m_wstrCandidate,m_vecReference,m_bSegment);
 		m_strScoreORW.Format("%.04f",dbScore);
 		sprintf(t_Score,"%.0f",(dbScore)*10);
 		if (t_Score == m_strManualScore)
+			++m_dbRaw[5]; */
+
+		/////////////
+		double sL,sNPL,sW;
+		m_Rouge.GetScoreLAll(sL,sNPL,sW);
+		m_strScoreORL.Format("%.04f",sL);
+		sprintf(t_Score,"%.0f",(sL)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[3]; 
+		m_strScoreORNPL.Format("%.04f",sNPL);
+		sprintf(t_Score,"%.0f",(sNPL)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[4]; 
+		m_strScoreORW.Format("%.04f",sW);
+		sprintf(t_Score,"%.0f",(sW)*10);
+		if (t_Score == m_strManualScore)
 			++m_dbRaw[5]; 
+		/////////////////////
+
 		dbScore = m_Rouge.Rouge_S(m_wstrCandidate,m_vecReference,m_bSegment);
 		m_strScoreORS.Format("%.04f",dbScore);
 		sprintf(t_Score,"%.0f",(dbScore)*10);
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[6]; 
+
+		double sS,sSU;
+		m_Rouge.GetScoreSSU(sS,sSU);
+		m_strScoreORSU.Format("%.04f",sSU);
+		sprintf(t_Score,"%.0f",(sSU)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[7]; 
 	}
 	else {
 
-		dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,1,m_bSegment);
+	/*	dbScore = m_Rouge.Rouge_N(m_wstrCandidate,m_vecReference,1,m_bSegment);
 		m_strScoreSR1.Format("%.04f",dbScore);
 		sprintf(t_Score,"%.0f",(dbScore)*10);
 		if (t_Score == m_strManualScore)
@@ -857,9 +967,27 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		m_strScoreSR3.Format("%.04f",dbScore);
 		sprintf(t_Score,"%.0f",(dbScore)*10);
 		if (t_Score == m_strManualScore)
+			++m_dbSeg[2]; */
+
+		m_Rouge.Rouge_N_All(m_wstrCandidate,m_vecReference,m_bSegment);
+		double s1,s2,s3;
+		m_Rouge.GetScroeNAll(s1,s2,s3);
+		m_strScoreSR1.Format("%.04f",s1);
+		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s1)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbSeg[0]; 
+		m_strScoreSR2.Format("%.04f",s2);
+		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s2)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbSeg[1]; 
+		m_strScoreSR3.Format("%.04f",s3);
+		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s3)*10);
+		if (t_Score == m_strManualScore)
 			++m_dbSeg[2]; 
+
+
 		dbScore = m_Rouge.Rouge_L(m_wstrCandidate,m_vecReference,m_bSegment);
-		m_strScoreSRL.Format("%.04f",dbScore);
+	/*	m_strScoreSRL.Format("%.04f",dbScore);
 		sprintf(t_Score,"%.0f",(dbScore)*10);
 		if (t_Score == m_strManualScore)
 			++m_dbSeg[3]; 
@@ -868,16 +996,44 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		sprintf(t_Score,"%.0f",(dbScore)*10);
 		if (t_Score == m_strManualScore)
 			++m_dbSeg[4]; 
+
+		
+
 		dbScore =  m_Rouge.Rouge_W(m_wstrCandidate,m_vecReference,m_bSegment);
 		m_strScoreSRW.Format("%.04f",dbScore);
 		sprintf(t_Score,"%.0f",(dbScore)*10);
 		if (t_Score == m_strManualScore)
+			++m_dbSeg[5]; */
+		/////////////
+		double sL,sNPL,sW;
+		m_Rouge.GetScoreLAll(sL,sNPL,sW);
+		m_strScoreSRL.Format("%.04f",sL);
+		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(sL)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[3]; 
+		m_strScoreSRNPL.Format("%.04f",sNPL);
+		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(sNPL)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbRaw[4]; 
+		m_strScoreSRW.Format("%.04f",sW);
+		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(sW)*10);
+		if (t_Score == m_strManualScore)
 			++m_dbSeg[5]; 
+		/////////////////////
+
 		dbScore = m_Rouge.Rouge_S(m_wstrCandidate,m_vecReference,m_bSegment);
 		m_strScoreSRS.Format("%.04f",dbScore);
-		sprintf(t_Score,"%.0f",(dbScore)*10);
+		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(dbScore)*10);
 		if (t_Score == m_strManualScore)
 			++m_dbSeg[6]; 
+
+		double sS,sSU;
+		m_Rouge.GetScoreSSU(sS,sSU);
+		m_strScoreSRSU.Format("%.04f",sSU);
+		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(sSU)*10);
+		if (t_Score == m_strManualScore)
+			++m_dbSeg[7]; 
+
 	}
 	
 }
@@ -954,25 +1110,38 @@ void  CEvaluationSystemDlg::PretreatmentUI(BOOL bSegment)
 void CEvaluationSystemDlg::OnBnClickedCancel()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	bExitThread = true;
 
-	while(1)
+	if (m_hThread)
 	{
-		DWORD result;
-		MSG msg;
+		bExitThread = true;
 
-		result = MsgWaitForMultipleObjects(1,&(m_hThread->m_hThread),FALSE,INFINITE,QS_ALLINPUT);
-		if (result == WAIT_OBJECT_0)
+		while(1)
 		{
-			break;
+			DWORD result;
+			MSG msg;
+
+			result = MsgWaitForMultipleObjects(1,&(m_hThread->m_hThread),FALSE,INFINITE,QS_ALLINPUT);
+			if (result == WAIT_OBJECT_0)
+			{
+				break;
+			}
+			else
+			{
+				PeekMessage(&msg,NULL,0,0,PM_REMOVE);
+				DispatchMessage(&msg);
+			}
 		}
-		else
-		{
-			PeekMessage(&msg,NULL,0,0,PM_REMOVE);
-			DispatchMessage(&msg);
-		}
+
 	}
-
-
 	CDialogEx::OnCancel();
+}
+
+
+LRESULT  CEvaluationSystemDlg::OnFinishThread(WPARAM wParam, LPARAM lParam)
+{
+	int nFlag = (int)wParam;
+	if (nFlag == 1)
+		UpdateData(0);
+
+	return 0;
 }

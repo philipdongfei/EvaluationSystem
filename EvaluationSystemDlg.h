@@ -16,7 +16,7 @@ class CEvaluationSystemDlg : public CDialogEx
 // 构造
 public:
 	CEvaluationSystemDlg(CWnd* pParent = NULL);	// 标准构造函数
-	void    ProcessBulk();//
+	bool    ProcessBulk();//
 // 对话框数据
 	enum { IDD = IDD_EVALUATIONSYSTEM_DIALOG };
 
@@ -39,6 +39,7 @@ protected:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+	afx_msg LRESULT  OnFinishThread(WPARAM , LPARAM );
 	DECLARE_MESSAGE_MAP()
 public:
 	CRichEditCtrl m_credtCandidate;
