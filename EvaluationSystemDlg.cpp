@@ -653,7 +653,8 @@ bool  CEvaluationSystemDlg::ProcessBulk()
 
 	CMarkup  xml;
 	xml.AddElem( "TextSet" );
-	for (int i=1; i<=100; i++)
+	CString strTitle;
+	for (int i=1; i<=1; i++)
 	{
 
 		if (bExitThread)
@@ -665,6 +666,10 @@ bool  CEvaluationSystemDlg::ProcessBulk()
 			}
 			return false;
 		}
+
+		strTitle.Format("EvaluationSystem   Text%d",i);
+		SetWindowTextA(strTitle);
+
 
 		xml.AddChildElem( "TEXT" );
 		xml.SetChildAttrib("No",i);
@@ -944,7 +949,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[6]; 
 
-		double sS,sSU;
+		double sS(0.0),sSU(0.0);
 		m_Rouge.GetScoreSSU(sS,sSU);
 		m_strScoreORSU.Format("%.04f",sSU);
 		sprintf(t_Score,"%.0f",(sSU)*10);

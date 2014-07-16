@@ -16,6 +16,9 @@ CRouge::CRouge(void)
 	 m_dbTScoreSU = 0;
 	 m_dbTScoreNPL = 0;
 	 m_dbTScoreW = 0;
+	 m_dbScoreS = 0;
+	 m_dbScoreSU = 0;
+	 m_dbTScoreSU = 0;
 }
 
 
@@ -832,14 +835,17 @@ double CRouge::ComputeFlcs_Summary(std::wstring  &wstrCandidate,std::wstring  &w
 		while(((pos1 = wstrReference.find(L"¡£",pos)) != std::string::npos) || 
 			((pos1 = wstrReference.find(L"£¿",pos)) != std::string::npos) ||
 			((pos1 = wstrReference.find(L"£¡",pos)) != std::string::npos) ||
-			((pos1 = wstrReference.find(L"£»",pos)) != std::string::npos))
+			((pos1 = wstrReference.find(L"£»",pos)) != std::string::npos) ||
+			((pos1 = wstrReference.find(L".",pos)) != std::string::npos)) 
+
 		{
 			wstrRSentence = wstrReference.substr(pos, pos1-pos);
 			pos2 = pos3 = 0;
 			while(((pos3 = wstrCandidate.find(L"¡£",pos2)) != std::string::npos) || 
 			((pos3 = wstrCandidate.find(L"£¿",pos2)) != std::string::npos) ||
 			((pos3 = wstrCandidate.find(L"£¡",pos2)) != std::string::npos) ||
-			((pos3 = wstrCandidate.find(L"£»",pos2)) != std::string::npos))
+			((pos3 = wstrCandidate.find(L"£»",pos2)) != std::string::npos) ||
+			((pos3 = wstrCandidate.find(L".",pos2)) != std::string::npos))
 			{
 				wstrCSentence = wstrCandidate.substr(pos2,pos3-pos2);
 				t_nLCS = 0,t_nR = 0,t_nC = 0;
@@ -1568,8 +1574,8 @@ std::vector<std::wstring> CRouge::GetWLLCS(double &lcs,double &mR,double &nC,dou
 			if (wstrPunctuation.find(wstrTemp,0) != std::string::npos || wstrTemp.at(0) == 13)
 				continue;
 			m_vectCandidate.push_back(wstrTemp);
-			if (ix == 0)
-				m_vectCandidate.push_back(wstrTemp);
+		//	if (ix == 0)
+		//		m_vectCandidate.push_back(wstrTemp);
 		}
 		wstrTemp = wstrReference.at(0);
 		m_vectReference.push_back(wstrTemp);
@@ -1579,8 +1585,8 @@ std::vector<std::wstring> CRouge::GetWLLCS(double &lcs,double &mR,double &nC,dou
 			if (wstrPunctuation.find(wstrTemp,0) != std::string::npos || wstrTemp.at(0) == 13)
 				continue;
 			m_vectReference.push_back(wstrTemp);
-			if (ir == 0)
-				m_vectReference.push_back(wstrTemp);
+		//	if (ir == 0)
+		//		m_vectReference.push_back(wstrTemp);
 
 		}
 

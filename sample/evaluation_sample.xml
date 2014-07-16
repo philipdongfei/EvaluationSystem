@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <TextSet Total="100">
 	<Text No="1">
 		<candidate>美政府局部瘫痪已踏入第八日，全球金融市场虽未出现恐慌，但作为保値的商品，例如黄金相信会随着10月17日，美借贷上限限期日渐迫近之际而受追棒。金价自于8月下旬高见1433.31，向下引伸了一条阻力趋线后，迄今仍继续限制金价升幅。</candidate>
 		<reference1>美国美政府局部瘫痪到第八日，全球金融市场虽然未出现恐慌，黄金会受追捧而美元及美股皆受创。白宫国家经济委员会主席会尝试争取参议院内全部民主党议员及不少于六位共和党议员支持，授扠奥巴马自行提升借贷上限一年。众议院对有关议案的封杀，又或令其胎死腹中都会增加或减少市场的避险情绪，直接影响金价上落。技术性走势方面，局其过去3个交易日，金价短线升幅具支持力。美政府恢复运作，金价下跌风险便会骤升。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>6</manualwork>
+		<manualwork>3</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -45,7 +45,7 @@
 英国第二季经济增长加速，步伐符合预期。美国上周新领失业援助人数大致符合预期，显示劳动市场继续稳建增长。美国6月份耐用品订单数据表现正面，加强制造业复苏动力反弹的观点。伦敦金，伦敦银短线回落走势完结，有反弹迹象。英镑兑美元和欧元兑美元短线都有反弹走势。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>8</manualwork>
+		<manualwork>4</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -84,7 +84,7 @@
 		<reference1>标普评级上调对美元而言是利多消息，金银走低，但幅度有限影响不大。近期欧洲经济数据有所好转，提振欧元，对美元涨势亦有所压制，金价也因此在低位受到支撑。黄金价格未能从上周五(6月7日)的下跌中反弹，部分可能是因为印度政府近期采取了进一步措施限制黄金进口。上周公布的美国非农就业资料好于预期，导致美股大涨，金价因此承压。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>6</manualwork>
+		<manualwork>3</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -123,7 +123,7 @@
 		<reference1>美元指数84关口近乎分水岭，当美指升到84上方时，非美货币承受较大压力，几乎无一例外下挫，而当美指掉落至84关口下方时，包括黄金在内的贵金属价格则会短暂抬升，试探关键阻力位。预测市场走势需要密切关注美指的走势，因为这半个月来美指充当了市场发动机的角色。欧洲市场方面，除了领头羊德国的经济维持原状，其他国家包括法国、意大利最新公布的GDP均不同程度的萎缩，欧元区的前景黯淡。英镑仍旧无法摆脱跌势，维持单边下行的走势。澳元成为了近期表现最差的货币，近半个月澳元跌幅超过日元成为了市场主要卖空对象。日本经济增长和日元的贬值显现出一定的促进关系，即随着日元的贬值，日本经济逐渐从通货紧缩、增长乏力的泥潭中走出。澳元成为了近期走势最疲软的货币。近期黄金价格与美元指数高度相关，黄金价格走势富有戏剧性。白银价格与黄金价格同升同降，波幅较大。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>5</manualwork>
+		<manualwork>3</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -162,7 +162,7 @@
 		<reference1>本周外汇市场中英镑表现抢眼。受一季度强劲GDP表现提振，英镑兑其他主要货币对手普遍走高。美国方面，美国一季度GDP表现增幅不及预期，数据出炉后令美元短线承压，但幅度有限。欧元区方面，经济火车头德国的表现黯然失色，引发欧洲央行降息预期。德国制造业萎缩加剧，服务业PMI也跌破荣枯分界线。下周汇市展望，整体对欧元表现不利。下周五公布的非农报告大可不必十分华丽，只要基本符合预期即能帮助美元获得市场青睐，美元整体前景相对乐观。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>6</manualwork>
+		<manualwork>4</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -201,7 +201,7 @@
 		<reference1>周一美元指数震荡走高至两个月高位，最新报在81.07。市场的避险情绪不断走高,美元指数受到避险买盘推动不断走升。明年1月总计6000亿美元的增税减支措施如果开始生效，很可能令美国经济再陷深度衰退。近期黄金价格受阻回落是出于对于上周涨势的获利了结和原油等风险资产价格下行。后市预计多个利好黄金走势的因素会继续推升金价。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>5</manualwork>
+		<manualwork>3</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -318,7 +318,7 @@
 		<reference1>欧洲银行发布报告称，金年黄金价格有所回落，但是未来仍将有上升潜力。全球投行纷纷发布对于希腊退出欧元区的可能性。近期不断增强。美国各项重要经济数据公布后，美元指数持稳，贵金属价格冲高后回落。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -396,7 +396,7 @@
 		<reference1>标普称意大利重返"A"级主权评级要取决于债务、经济增长趋势以及政府政策。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>6</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -552,7 +552,7 @@
 		<reference1>国际金价大幅下跌，上海现货金也大幅下挫。追求稳健将成为近期市场的常态。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>8</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -591,7 +591,7 @@
 		<reference1>由于国际评级机构标普下调希腊评级至"CC"以及意大利统计局(Istat)公布的数据低于预期，欧元/美元低位震荡。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -630,7 +630,7 @@
 		<reference1>惠誉表示如果欧盟采取希腊债务方案，这将导致希腊评级被调降至C。而动议式方案完成时，将把希腊债信调降至RD。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>9</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -903,7 +903,7 @@
 		<reference1>英国保守党党魁卡梅伦及与自由民主党达成权力分配协议之后，卡梅伦成为英国近两百年来最年轻的首相；自由民主党党魁克莱格则获任副首相。因为市场担心英国在联合政府上台后出现政治紧张局面，对新政府打算如何应对巨额债务亦存担忧，英镑兑美元上周反复回落。相对强弱指标及随机指数在上周小幅回升后再度回调，预示英镑上扬乏力仍有进一步下落之趋势。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -981,7 +981,7 @@
 		<reference1>由于对欧元区债务危机影响的担忧，及对中国成长前景有点谨慎，使得风险偏好维持受压抑水平。这将持续打压澳元走势。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>5</manualwork>
+		<manualwork>6</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1020,7 +1020,7 @@
 		<reference1>上周的零售数据显示纽西兰经济复苏并不理想，导致纽元失望性卖盘。欧美股市回挫和欧洲债务危机忧虑持续，市场风险偏好回落，亦拖累纽元下跌。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>8</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1056,10 +1056,10 @@
 	</Text>
 	<Text No="28">
 		<candidate>加元兑美元周五回落接近整周低位，因对欧元区国家的节支举措可能损及该地区经济复苏的担忧加剧，令风险意愿回落。</candidate>
-		<reference1>因为对欧元区国家的节支举措可能损害该地区经济复苏的担忧加剧，加元兑美元周五回落接近整周低位。</reference1>
+		<reference1>加元兑美元周五回落接近整周低位,因对欧元区国家的节支举措可能损害该地区经济复苏的担忧加剧。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>8<manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1098,7 +1098,7 @@
 		<reference1>美国联邦储备理事会表示维持利率的温和政策立场使得投资者消减多头仓位。美元指数下跌。对希腊债务问题的担忧依然困扰市场，拖累欧元兑美元走低，促使美元回弹。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>8</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1134,7 +1134,7 @@
 	</Text>
 	<Text No="30">
 		<candidate>欧元兑美元上周早段上落盘整，及后再复滑落。救助希腊的情况越发不明朗，是带动欧元上周由升转跌之主要因素。</candidate>
-		<reference1>周初欧盟财长支持在需要时帮助希腊的计划，欧元兑美元有一定涨幅。到周四时，由于救助希腊的情况越发不明朗，是影响欧元上周由升转跌之主要因素。</reference1>
+		<reference1>欧元兑美元有一定涨幅，周初欧盟财长支持在需要时帮助希腊的计划。到周四时，由于救助希腊的情况越发不明朗，是影响欧元上周由升转跌之主要因素。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
 		<manualwork>7</manualwork>
@@ -1176,7 +1176,7 @@
 		<reference1>部分市场人士对央行略微感到失望，故未有造成日圆沽压。有关希腊救助的忧虑，则降低市场风险偏好，从而支撑日圆走势。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1254,7 +1254,7 @@
 		<reference1>瑞士央行理事的言论以及市场对希腊援助的担忧，令至瑞郎兑欧元大幅上扬。投资者担心会触发瑞郎央行干预，所以不敢轻举妄动。瑞郎兑美元上周追随主要货币兑美元的走势先升后回软，周初升的在周末前都跌回去。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>8</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1293,7 +1293,7 @@
 		<reference1>纽元兑美元跟随市场风险偏好而波动；周中美国公布的数据显示该国通胀压力不大后，纽元和其他币种大幅上扬。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>8</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1332,7 +1332,7 @@
 		<reference1>AAA评级国国家债信状况已经恶化。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1371,7 +1371,7 @@
 		<reference1>料周四耶伦听证会前，金价还将继续承压。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1488,7 +1488,7 @@
 		<reference1>上周受到欧洲央行意外降息及美GDP及非农数据的强势报好影响，国际金价在震荡盘中遭遇空头滑铁卢走势, 空头击穿1300大关促发大量止损盘使得金价最刷新当周低点。本周整体走势围绕1310-1251区域保持震荡操作，预计震荡方向将是先抑后扬。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>7</manualwork>
+		<manualwork>5</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1527,7 +1527,7 @@
 		<reference1>上周主导白银价格打压的主要因素是美国非农就业数据。本周应适当保持逢低吸纳。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>3</manualwork>
+		<manualwork>1</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1566,7 +1566,7 @@
 		<reference1>美国10月份非农业职位加速增长，远好过预期。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>5</manualwork>
+		<manualwork>3</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1605,7 +1605,7 @@
 		<reference1>美国9月份个人收入增长好过预期，通胀压力保持十分温和。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>5</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1644,7 +1644,7 @@
 		<reference1>美国非农业就业人数变化和失业率都推迟公布，美元在美国短期前景难以预测的情况下不断承压。短期内美元要走强还是比较困难的。预料欧元还是维持强势。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>6</manualwork>
+		<manualwork>5</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1683,7 +1683,7 @@
 		<reference1>瑞士2月的UBS消费指数和3月的KOF经济领先指标的一好一坏导致美元兑瑞郎形成先回落后冲高的走势。技术面上看美元兑瑞郎并没有明确的多头趋势结束信号。德、法公布的相关经济数据对欧元不会对固有的下降趋势形成太大影响。技术面上看欧元兑美元下降趋势仍未有明确的终结信号出现。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>4</manualwork>
+		<manualwork>2</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1722,7 +1722,7 @@
 		<reference1>美、欧、日、英等央行决策者频频释放维持乃至加码量化宽松货币政策的信号，越来越多的新兴经济体加入宽松阵营，新一轮全球宽松大幕已然全面拉开。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>8</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1761,7 +1761,7 @@
 		<reference1>短期内英国主权信用等级还处在较为稳定的状况。短期来看英国的财政支出稍大有可能是暂时的，所以对惠誉的警告下调英国主权信用等级大家不用太紧张。英镑也不会因此出现大幅下跌。由于欧洲经济状况相对改善，投资者对欧洲信心会明显回升，因此欧元、英镑兑美元会在2013年稳步上行。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>8</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1800,7 +1800,7 @@
 		<reference1>针对富人加税提案谈判的困难打压了市场风险偏好，非美货币除日元外纷纷回落。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>9</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1839,7 +1839,7 @@
 		<reference1>英国央行12月会议纪要公布，以及惠誉威胁美国主权评级,使得英镑兑美元上破1.6300。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>8</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1878,7 +1878,7 @@
 		<reference1>目前并没有调整意大利短期主权评级的计划。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork></manualwork>
+		<manualwork>8</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -1956,7 +1956,7 @@
 		<reference1>评级下调后，西班牙银行业面临市场担忧。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>5</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2034,7 +2034,7 @@
 		<reference1>由于希腊债务问题有各方面因素的不确定性使得市场勉强维持谨慎乐观。评级机构下调西班牙银行的评级。黄金白银受到市场对希腊问题影响，而形成震荡下行格局。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>3</manualwork>
+		<manualwork>2</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2112,7 +2112,7 @@
 		<reference1>美国昨日公布的GDP修正值并不喜人，数据低于预期值对美元不利，加上指标的背离迹象，总体上美元有下滑可能。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>8</manualwork>
+		<manualwork>6</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2151,7 +2151,7 @@
 		<reference1>欧元兑美元出现了震荡下行的走势。随机指标和相对强弱指数倾向看跌，表明横向走势近期可能下滑。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>8</manualwork>
+		<manualwork>6</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2190,7 +2190,7 @@
 		<reference1>近期法国国债收益率上扬，且经济增长前景更趋疲弱，可能对法国的主权评级构成负面影响，该消息打压欧元兑美元加速下跌。受风险厌恶情绪上升影响，风险货币全线下跌。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>8</manualwork>
+		<manualwork>6</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2229,7 +2229,7 @@
 		<reference1>标普调降西班牙评级，欧元/美元受到消息打压。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>3</manualwork>
+		<manualwork>2</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2268,7 +2268,7 @@
 		<reference1>亚太地区股市早盘走弱。标普下调西班牙债信评级，导致对欧债危机担忧再起，而亚洲经济和出口类型企业收益也将因此承受压力。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>8</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2307,7 +2307,7 @@
 		<reference1>现货金昨日重新站上5日均线，同时回到上方黄金分割点位的阻力线之上，惠誉再次警示美国需要削减赤字来维持市场对其AAA评级的信心，避险情绪再次成为金价上扬的推手，现货金短期修正已完毕，后市依然以多头思路为主。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>7</manualwork>
+		<manualwork>5</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2346,7 +2346,7 @@
 		<reference1>惠誉表示80%-90%债务比通常为AAA评级的上限。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>6</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2424,7 +2424,7 @@
 		<reference1>9月或可开始削QE，望明年上半年结束QE。英国失业率及央行会议纪要双双利好。6月人民币实际有效汇率连续第八个月创新高。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>6</manualwork>
+		<manualwork>4</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2502,7 +2502,7 @@
 		<reference1>因市场对美国短期内将缩减货币刺激措施的预期不断升温，美元指数周一升至近三周最高位。德国公布德国6月IFO企业景气判断指数符合预期，欧元兑美元的跌势受到支撑。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>8</manualwork>
+		<manualwork>6</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2541,7 +2541,7 @@
 		<reference1>日央行副总裁称不会对市场临时性波动采取行动。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2580,7 +2580,7 @@
 		<reference1>英国财政大臣欧思邦与政府部门就减支计划达成协议。英镑兑美元触及三周低位后有所回升。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>8</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2619,7 +2619,7 @@
 		<reference1>因美国削减货币刺激计划的预期持续推高美国公债收益率，带动美元兑瑞郎上涨。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>7</manualwork>
+		<manualwork>5</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2658,7 +2658,7 @@
 		<reference1>对中国经济成长忧虑敏感的澳元兑美元周一触及低位，但美联储发表将在短期内结束货币刺激的看法后，澳元兑美元尾盘有所回升。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>8</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></seg>
@@ -2697,7 +2697,7 @@
 		<reference1>由于美国经济扩张的强劲程度使美联储今年晚些时候开始减缓购债计划。美元此后大幅走高。纽元兑美元继续承受巨大沽压，本周一触及去年6月以来最低位。　</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2733,7 +2733,7 @@
 	</Text>
 	<Text No="71">
 		<candidate>加元兑美元周一触及21个月低位后缩减部份跌幅，此前美国联邦储备理事会(FED)官员的讲话缓和市场对美联储即将终止刺激措施的担忧。</candidate>
-		<reference1>因为此前美国联邦储备理事会(FED)官员的讲话缓和市场对美联储即将终止刺激措施的担忧，加元兑美元周一触及21个月低位后有所回升。</reference1>
+		<reference1>加元兑美元周一触及21个月低位后有所回升,此前美国联邦储备理事会(FED)官员的讲话缓和市场对美联储即将终止刺激措施的担忧。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
 		<manualwork>7</manualwork>
@@ -2775,7 +2775,7 @@
 		<reference1>昨日主要交投时段内风险货币继续上涨，主要的推动力量可能依然是上周五美国财政悬崖谈判的余温。但时段结束后，穆迪突然将法国信用评级由AAA下调至AA1，风险货币迅速回吐日内涨幅。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>6</manualwork>
+		<manualwork>1</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2814,7 +2814,7 @@
 		<reference1>周二(11月20日)亚市早盘，欧元兑美元大幅走低，现交投于1.2780一线。隔夜纽市尾盘穆迪意外宣布下调法国主权债务评级，将该国政府债务评级由AAA的最高水平下调一档至AA1。受此利空消息打压，欧元兑美元快速跳水。日内市场风险事件众多，日本央行将于今日亚市盘中公布利率决议，而欧元集团会议和伯老讲话则将在欧美时段上演。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>6</manualwork>
+		<manualwork>5</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2853,7 +2853,7 @@
 		<reference1>风险币种冲高回落，穆迪下调法国评级。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>6</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2931,7 +2931,7 @@
 		<reference1>昨晚间美数据表现不佳支撑白银小幅反弹测试27.20-27.30短线阻力，同时穆迪下调欧洲金融稳定基金的评级，白银承压快速回落。综合看，白银白盘时段维持弱势震荡，波动空间不大。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>7</manualwork>
+		<manualwork>2</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -2970,7 +2970,7 @@
 		<reference1>周二公布的中国汇丰PMI初值意外好转，提升了市场对中国经济二季度见底预期，市场风险偏好略有好转。欧洲形势任不乐观，限制了贵金属价格的反弹。银价的技术指标显示短期多空力度趋于均衡。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>1</manualwork>
+		<manualwork>3</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3048,7 +3048,7 @@
 		<reference1>穆迪将西班牙国债评级从"A3"降至"Baa3"，展望为负面。该机构将在至多3个月内完成对西班牙国债评级的评估，暗示短期内该国评级仍有进一步下调的空间。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>4</manualwork>
+		<manualwork>2</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3087,7 +3087,7 @@
 		<reference1>投资者应继续关注欧洲方面的发展和降评情况。欧元区主权债评等遭调降的威胁成为欧元现在最大风险。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>5</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3126,7 +3126,7 @@
 		<reference1>本周外汇市场上，因上周欧盟峰会草草收场，并未给投资者带来预期中的提振，欧元带领非美货币全面下跌，其中欧元跌破前期重要低点支撑并且触及1.30下方。欧债危机的扩散，以及评级机构落井下石，是欧元走软的主要原因，而峰会结果无新意也无诚意，则加速了汇价的下跌。即使欧洲危机恶化，美联储也不会采取更多行动帮助欧洲。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>5</manualwork>
+		<manualwork>4</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3165,7 +3165,7 @@
 		<reference1>标普将菲律宾主权信用评级展望调为正面。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>8</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3204,7 +3204,7 @@
 		<reference1>本周欧元区政坛好戏连台，由希腊领衔主演的公投闹剧刚刚落下帷幕，意大利政府的"倒台风波"随即勇夺收视榜冠军。贝卢斯科尼领导的政府政局不稳，致使国家减赤重任受到影响，引爆债市重磅炸弹，意大利国债收益率周三一举跨越7.0%的"生死线"。风险货币应声重挫，欧元/美元周三暴跌近2.5%，创15个月最大单日跌幅。欧洲央行被迫大举购债以控制意大利国债收益率屡创新高的势头，从而帮助风险货币低位企稳。周五，意大利议会参议院通过了新的预算法案，为该法案的全面通过扫清了障碍，也为意大利临时政府的构建铺平了道路；同时，希腊新临时政府总理帕帕季莫斯宣誓就职，希腊闹剧也暂告一段落。风险货币因此全线反弹，基本收复上半周跌幅。此外，标普再摆乌龙，错误调降法国评级，亦增加了市场对法国的焦虑，"法式电影"能否接档上映，诸位看官拭目以待。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>6</manualwork>
+		<manualwork>4</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3243,7 +3243,7 @@
 		<reference1>欧盟银行业管理局上周五公布的银行业压力测试结果显示，仅有8家欧洲银行未能通过测试。投资者对欧洲银行压力测试结果持怀疑态度，市场对欧债危机的忧虑导致欧元兑美元重启跌势。今天美国将公布5月国际净资本流入和7月NAHB房价指数，这两个指数的好坏也会影响美元走势。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>8</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3282,7 +3282,7 @@
 		<reference1>标普威胁调降美国评级引发美元抛压。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3399,7 +3399,7 @@
 		<reference1>IBFX 被评为2011年度IBTimes最佳亚洲外汇交易商。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>8</manualwork>
+		<manualwork>4</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3438,7 +3438,7 @@
 		<reference1>穆迪将爱尔兰各大银行长期存款评级下调2级。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>5</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3477,7 +3477,7 @@
 		<reference1>惠誉警告日本评级面临下调风险打压日元。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>6</manualwork>
+		<manualwork>5</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3516,7 +3516,7 @@
 		<reference1>惠誉调降冰岛长期外汇和本币发行商的违约评级，短期外汇发行商违约评级和国家信用上限下调。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3594,7 +3594,7 @@
 		<reference1>美国ADP就业人数增幅不及市场预期令美指承压。欧洲央行德拉基措辞缓解了市场对欧元汇率的担忧同时意大利政局政局缓解，均亦对美指构成压制。美国ADP疲软打压美元和欧洲利好不断，提振欧元的同时也对美元构成压制，上面二大原因令金价走高。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>8</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3633,7 +3633,7 @@
 		<reference1>穆迪下调巴西主权评级展望至稳定级。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>10</manualwork>
+		<manualwork>6</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3711,7 +3711,7 @@
 		<reference1>周二美国联邦政府瘫痪，但黄金未有受游资追捧成为资金避险港。金价反而下降了。昨夜整个期金市场成交量突然攀升是因为金价连续失守多个技术性支持位，迫使买盘要止损离场导致的。今夜市场焦点会是ADP私人就业市场数据。原因是美劳工部因停工关系，未必会于今周五公布非农。因此，今夜的就业公布便不容忽视，有机会剌激金价大幅波动。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>8</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3789,7 +3789,7 @@
 		<reference1>国际金价跌向近3年低位，上海现货金复制跌势。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>8</manualwork>
+		<manualwork>5</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
@@ -3828,7 +3828,7 @@
 		<reference1>美国5月谘商会消费者信心指数为2008年2月以来最高水平。美国3月S&P/CS20座大城市房价指数创2006年4月以来最大增幅。日本股市近期表现不稳定。美指与美股获支撑上扬同时，贵金属承压下跌。</reference1>
 		<reference2></reference2>
 		<reference3></reference3>
-		<manualwork>9</manualwork>
+		<manualwork>7</manualwork>
 		<Rough1>
 			<Org></Org>
 			<Seg></Seg>
