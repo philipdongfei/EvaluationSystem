@@ -80,4 +80,5 @@ public:
 	afx_msg void OnBnClickedCancel();
 
 	CWinThread *m_hThread;
+	afx_msg void OnBnClickedBtnCorrelation();
 };

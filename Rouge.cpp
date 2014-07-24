@@ -400,7 +400,7 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 	}
 	else
 	{
-		m_dbScoreSN1 = m_dbScoreON1;
+		m_dbScoreON1 = m_dbScoreN1;
 	}
 
 }
@@ -880,7 +880,7 @@ double CRouge::ComputeFlcs_Summary(std::wstring  &wstrCandidate,std::wstring  &w
 				pos2 = pos3 + 1;
 			}
 			nR += t_nR;
-			nLCS += (t_nSubLCS/t_nR);
+			nLCS += t_nSubLCS;
 			t_nSubLCS = 0,t_nLCS = 0,t_nR = 0,t_nC = 0;
 
 			///////////////////NPL

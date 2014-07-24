@@ -17,6 +17,20 @@
 #include <fstream>
 #include "Markup.h"
 
+#include ".\\alglib\\alglibinternal.h"
+#include ".\\alglib\\alglibmisc.h"
+#include ".\\alglib\\linalg.h"
+#include ".\\alglib\\statistics.h"
+#include ".\\alglib\\dataanalysis.h"
+#include ".\\alglib\\specialfunctions.h"
+#include ".\\alglib\\solvers.h"
+#include ".\\alglib\\optimization.h"
+#include ".\\alglib\\diffequations.h"
+#include ".\\alglib\\fasttransforms.h"
+#include ".\\alglib\\integration.h"
+#include ".\\alglib\\interpolation.h"
+
+using namespace alglib;
 
 #ifndef OS_LINUX
 #include <Windows.h>
@@ -138,6 +152,7 @@ BEGIN_MESSAGE_MAP(CEvaluationSystemDlg, CDialogEx)
 	ON_BN_CLICKED(ID_BTN_BULK, &CEvaluationSystemDlg::OnBnClickedBtnBulk)
 	ON_BN_CLICKED(IDCANCEL, &CEvaluationSystemDlg::OnBnClickedCancel)
 	ON_MESSAGE( WM_FINISH_THREAD,OnFinishThread)
+	ON_BN_CLICKED(IDC_BTN_CORRELATION, &CEvaluationSystemDlg::OnBnClickedBtnCorrelation)
 END_MESSAGE_MAP()
 
 
@@ -255,6 +270,10 @@ void CEvaluationSystemDlg::OnBnClickedOk()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	UpdateData();
+	if (m_credtCandidate.GetTextLength() == 0)
+		return;
+	if (m_credtReference.GetTextLength() == 0)
+		return;
 	double dbScore(0.0);
 	int nType = m_cmbType.GetCurSel();
 	/*char *pBuffer = new char[1024];
@@ -316,13 +335,13 @@ void CEvaluationSystemDlg::OnBnClickedOk()
 		  m_vecReference.push_back(m_wstrReference);
 	 }*/
 	///segment
-	m_bSegment = TRUE;
+//	m_bSegment = TRUE;
 	PretreatmentUI(m_bSegment);
 	ComputeRough(m_bSegment);
 	/////no segment
-	m_bSegment = FALSE;
-	PretreatmentUI(m_bSegment);
-	ComputeRough(m_bSegment);
+//	m_bSegment = FALSE;
+//	PretreatmentUI(m_bSegment);
+//	ComputeRough(m_bSegment);
 
 
 
@@ -654,7 +673,7 @@ bool  CEvaluationSystemDlg::ProcessBulk()
 	CMarkup  xml;
 	xml.AddElem( "TextSet" );
 	CString strTitle;
-	for (int i=1; i<=1; i++)
+	for (int i=1; i<=100; i++)
 	{
 
 		if (bExitThread)
@@ -670,6 +689,8 @@ bool  CEvaluationSystemDlg::ProcessBulk()
 		strTitle.Format("EvaluationSystem   Text%d",i);
 		SetWindowTextA(strTitle);
 
+		strReference.clear();
+		strCandidate.clear();
 
 		xml.AddChildElem( "TEXT" );
 		xml.SetChildAttrib("No",i);
@@ -704,6 +725,9 @@ bool  CEvaluationSystemDlg::ProcessBulk()
 		in.clear();
 		////////////////raw
 		m_bSegment = FALSE;
+		m_wstrCandidate.clear();
+		 m_wstrReference.clear();
+		 m_vecReference.clear();
 		PretreatmentBulk(m_bSegment,strReference,strCandidate);
 		ComputeRough(m_bSegment);
 		////////////segment
@@ -734,37 +758,35 @@ bool  CEvaluationSystemDlg::ProcessBulk()
 		xml.AddChildElem( "SEG",m_strScoreSR3 );
 		xml.OutOfElem();
 
-		xml.AddChildElem("ROUGE L");
+		xml.AddChildElem("ROUGEL");
 		xml.IntoElem();
 		xml.AddChildElem( "ORG", m_strScoreORL );
 		xml.AddChildElem( "SEG",m_strScoreSRL );
 		xml.OutOfElem();
 
-		xml.AddChildElem("ROUGE NPL");
+		xml.AddChildElem("ROUGENPL");
 		xml.IntoElem();
 		xml.AddChildElem( "ORG", m_strScoreORNPL );
 		xml.AddChildElem( "SEG",m_strScoreSRNPL );
 		xml.OutOfElem();
 
-		xml.AddChildElem("ROUGE W");
+		xml.AddChildElem("ROUGEW");
 		xml.IntoElem();
 		xml.AddChildElem( "ORG", m_strScoreORW );
 		xml.AddChildElem( "SEG",m_strScoreSRW );
 		xml.OutOfElem();
 
-		xml.AddChildElem("ROUGE S");
+		xml.AddChildElem("ROUGES");
 		xml.IntoElem();
 		xml.AddChildElem( "ORG", m_strScoreORS );
 		xml.AddChildElem( "SEG",m_strScoreSRS );
 		xml.OutOfElem();
 
-		xml.AddChildElem("ROUGE SU");
+		xml.AddChildElem("ROUGESU");
 		xml.IntoElem();
 		xml.AddChildElem( "ORG", m_strScoreORSU );
 		xml.AddChildElem( "SEG",m_strScoreSRSU );
 		xml.OutOfElem();
-
-		
 		
 	
 	}
@@ -892,15 +914,27 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		double s1,s2,s3;
 		m_Rouge.GetScroeNAll(s1,s2,s3);
 		m_strScoreOR1.Format("%.04f",s1);
+		if (m_strScoreOR1 == "0")
+			m_strScoreOR1 = "1";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s1)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[0]; 
 		m_strScoreOR2.Format("%.04f",s2);
+		if (m_strScoreOR2 == "0")
+			m_strScoreOR2 = "1";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s2)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[1]; 
 		m_strScoreOR3.Format("%.04f",s3);
+		if (m_strScoreOR3 == "0")
+			m_strScoreOR3 = "1";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s3)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[2]; 
 
@@ -930,29 +964,49 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		double sL,sNPL,sW;
 		m_Rouge.GetScoreLAll(sL,sNPL,sW);
 		m_strScoreORL.Format("%.04f",sL);
+		if (m_strScoreORL == "0")
+			m_strScoreORL = "1";
 		sprintf(t_Score,"%.0f",(sL)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[3]; 
 		m_strScoreORNPL.Format("%.04f",sNPL);
+		if (m_strScoreORNPL == "0")
+			m_strScoreORNPL = "1";
 		sprintf(t_Score,"%.0f",(sNPL)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[4]; 
 		m_strScoreORW.Format("%.04f",sW);
+		if (m_strScoreORW == "0")
+			m_strScoreORW = "1";
 		sprintf(t_Score,"%.0f",(sW)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[5]; 
 		/////////////////////
 
 		dbScore = m_Rouge.Rouge_S(m_wstrCandidate,m_vecReference,m_bSegment);
 		m_strScoreORS.Format("%.04f",dbScore);
+		if (m_strScoreORS == "0")
+			m_strScoreORS = "1";
 		sprintf(t_Score,"%.0f",(dbScore)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[6]; 
 
 		double sS(0.0),sSU(0.0);
 		m_Rouge.GetScoreSSU(sS,sSU);
 		m_strScoreORSU.Format("%.04f",sSU);
+		if (m_strScoreORSU == "0")
+			m_strScoreORSU = "1";
 		sprintf(t_Score,"%.0f",(sSU)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[7]; 
 	}
@@ -978,15 +1032,27 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		double s1,s2,s3;
 		m_Rouge.GetScroeNAll(s1,s2,s3);
 		m_strScoreSR1.Format("%.04f",s1);
+		if (m_strScoreSR1 == "0")
+			m_strScoreSR1 = "1";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s1)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbSeg[0]; 
 		m_strScoreSR2.Format("%.04f",s2);
+		if (m_strScoreSR2 == "0")
+			m_strScoreSR2 = "1";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s2)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbSeg[1]; 
 		m_strScoreSR3.Format("%.04f",s3);
+		if (m_strScoreSR3 == "0")
+			m_strScoreSR3 = "1";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s3)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbSeg[2]; 
 
@@ -1013,29 +1079,49 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		double sL,sNPL,sW;
 		m_Rouge.GetScoreLAll(sL,sNPL,sW);
 		m_strScoreSRL.Format("%.04f",sL);
+		if (m_strScoreSRL == "0")
+			m_strScoreSRL = "1";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(sL)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
-			++m_dbRaw[3]; 
+			++m_dbSeg[3]; 
 		m_strScoreSRNPL.Format("%.04f",sNPL);
+		if (m_strScoreSRNPL == "0")
+			m_strScoreSRNPL = "1";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(sNPL)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
-			++m_dbRaw[4]; 
+			++m_dbSeg[4]; 
 		m_strScoreSRW.Format("%.04f",sW);
+		if (m_strScoreSRW == "0")
+			m_strScoreSRW = "1";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(sW)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbSeg[5]; 
 		/////////////////////
 
 		dbScore = m_Rouge.Rouge_S(m_wstrCandidate,m_vecReference,m_bSegment);
 		m_strScoreSRS.Format("%.04f",dbScore);
+		if (m_strScoreSRS == "0")
+			m_strScoreSRS = "1";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(dbScore)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbSeg[6]; 
 
 		double sS,sSU;
 		m_Rouge.GetScoreSSU(sS,sSU);
 		m_strScoreSRSU.Format("%.04f",sSU);
+		if (m_strScoreSRSU == "0")
+			m_strScoreSRSU = "1";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(sSU)*10);
+		if (strcmp(t_Score,"0") == 0)
+			strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbSeg[7]; 
 
@@ -1149,4 +1235,239 @@ LRESULT  CEvaluationSystemDlg::OnFinishThread(WPARAM wParam, LPARAM lParam)
 		UpdateData(0);
 
 	return 0;
+}
+
+void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	real_1d_array arrManual;
+	//	real_1d_array arrR1_org,arrR1_seg,arrR2_org,arrR2_seg,arrR3_org,arrR3_seg;
+	arrManual.setlength(100);
+	CMarkup  xml;
+	CString strPath(_T("")),manualscore(_T("")),score(_T(""));
+	strPath.Format(".\\sample\\result.xml");
+	double  r1_od(0.0),r1_sd(0.0),r2_od(0.0),r2_sd(0.0),r3_od(0.0),r3_sd(0.0),rL_od(0.0),rL_sd(0.0),
+		rNPL_od(0.0),rNPL_sd(0.0),rW_od(0.0),rW_sd(0.0),rS_od(0.0),rS_sd(0.0),rSU_od(0.0),rSU_sd(0.0),
+		//////////spearman correlation
+		rho_r1o(0.0),rho_r1s(0.0),rho_r2o(0.0),rho_r2s(0.0),rho_r3o(0.0),rho_r3s(0.0),rho_rlo(0.0),
+		rho_rls(0.0),rho_rnplo(0.0),rho_rnpls(0.0),rho_rwo(0.0),rho_rws(0.0),rho_rso(0.0),rho_rss(0.0),
+		rho_rsuo(0.0),rho_rsus(0.0),
+		////////pearson correlation
+		ps_rho_r1o(0.0),ps_rho_r1s(0.0),ps_rho_r2o(0.0),ps_rho_r2s(0.0),ps_rho_r3o(0.0),ps_rho_r3s(0.0),ps_rho_rlo(0.0),
+		ps_rho_rls(0.0),ps_rho_rnplo(0.0),ps_rho_rnpls(0.0),ps_rho_rwo(0.0),ps_rho_rws(0.0),ps_rho_rso(0.0),ps_rho_rss(0.0),
+		ps_rho_rsuo(0.0),ps_rho_rsus(0.0);
+	real_1d_array arrR1_o ,arrR2_o,arrR3_o,arrRL_o,arrRNPL_o,arrRW_o,arrRS_o,arrRSU_o,arrR1_s ,arrR2_s,arrR3_s,arrRL_s,arrRNPL_s,arrRW_s,arrRS_s,arrRSU_s;
+	arrR1_o.setlength(100) ;
+	arrR2_o.setlength(100);
+	arrR3_o.setlength(100),
+		arrRL_o.setlength(100);
+	arrRNPL_o.setlength(100);
+	arrRW_o.setlength(100);
+	arrRS_o.setlength(100);
+	arrRSU_o.setlength(100);
+	arrR1_s.setlength(100) ;
+	arrR2_s.setlength(100);
+	arrR3_s.setlength(100);
+	arrRL_s.setlength(100);
+	arrRNPL_s.setlength(100);
+	arrRW_s.setlength(100),
+		arrRS_s.setlength(100);
+	arrRSU_s.setlength(100);
+	double     x(0),y1(0),y2(0);
+	int	 nIndex(0);
+//	double  arrManual[101],arrRouge1[101];
+	if(xml.Load(strPath))
+	{
+		while ( xml.FindChildElem("TEXT") )
+		{
+			manualscore = xml.GetChildAttrib("ManualScore");
+			x = atoi(manualscore);
+			arrManual(nIndex) = x;
+			if( xml.FindChildElem("ROUGE1"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arrR1_o(nIndex) = y1;
+
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arrR1_s(nIndex) = y2;
+				xml.OutOfElem();
+
+			}
+		
+			//////////////
+			if( xml.FindChildElem("ROUGE2"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arrR2_o(nIndex) = y1;
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arrR2_s(nIndex) = y2;
+				xml.OutOfElem();
+
+			}
+		
+			///////////
+	
+			if( xml.FindChildElem("ROUGE3"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arrR3_o(nIndex) = y1;
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arrR3_s(nIndex) = y2;
+				xml.OutOfElem();
+
+			}
+		
+			///////////
+		
+			if( xml.FindChildElem("ROUGEL"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arrRL_o(nIndex) = y1;
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arrRL_s(nIndex) = y2;
+				xml.OutOfElem();
+
+			}
+			rL_od += pow((x-y1),2.0);
+			rL_sd += pow((x-y2),2.0);
+			///////////
+		
+			if( xml.FindChildElem("ROUGENPL"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arrRNPL_o(nIndex) = y1;
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arrRNPL_s(nIndex) = y2;
+				xml.OutOfElem();
+
+			}
+		
+			///////////
+		
+			if( xml.FindChildElem("ROUGEW"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arrRW_o(nIndex) = y1;
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arrRW_s(nIndex) = y2;
+				xml.OutOfElem();
+
+			}
+			///////////
+			
+			if( xml.FindChildElem("ROUGES"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arrRS_o(nIndex) = y1;
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arrRS_s(nIndex) = y2;
+				xml.OutOfElem();
+
+			}
+		
+			///////////
+		
+			if( xml.FindChildElem("ROUGESU"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arrRSU_o(nIndex) = y1;
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arrRSU_s(nIndex) = y2;
+				xml.OutOfElem();
+
+			}
+		
+			++nIndex;
+		}
+	
+	
+		//v = cov2(arrx, arry);
+
+		/////spearman correlation
+	
+		rho_r1o= spearmancorr2(arrManual,arrR1_o);
+		rho_r1s = spearmancorr2(arrManual,arrR1_o);
+		rho_r2o = spearmancorr2(arrManual,arrR2_o);
+		rho_r2s= spearmancorr2(arrManual,arrR2_s);
+		rho_r3o  = spearmancorr2(arrManual,arrR3_o);
+		rho_r3s= spearmancorr2(arrManual,arrR3_s);
+
+		rho_rlo  = spearmancorr2(arrManual,arrRL_o);
+		rho_rls= spearmancorr2(arrManual,arrRL_s);
+
+		rho_rnplo  = spearmancorr2(arrManual,arrRNPL_o);
+		rho_rnpls= spearmancorr2(arrManual,arrRNPL_s);
+
+		rho_rwo  = spearmancorr2(arrManual,arrRW_o);
+		rho_rws= spearmancorr2(arrManual,arrRW_s);
+
+		rho_rso  = spearmancorr2(arrManual,arrRS_o);
+		rho_rss= spearmancorr2(arrManual,arrRS_s);
+		rho_rsuo  = spearmancorr2(arrManual,arrRSU_o);
+		rho_rsus= spearmancorr2(arrManual,arrRSU_s);
+		//////pearson correlation
+
+		ps_rho_r1o = pearsoncorr2(arrManual,arrR1_o);
+		ps_rho_r1s = pearsoncorr2(arrManual,arrR1_o);
+		ps_rho_r2o= pearsoncorr2(arrManual,arrR2_o);
+		ps_rho_r2s = pearsoncorr2(arrManual,arrR2_s);
+		ps_rho_r3o=  pearsoncorr2(arrManual,arrR3_o);
+		ps_rho_r3s = pearsoncorr2(arrManual,arrR3_s);
+		ps_rho_rlo= pearsoncorr2(arrManual,arrRL_o);
+		ps_rho_rls = pearsoncorr2(arrManual,arrRL_s);
+		ps_rho_rnplo= pearsoncorr2(arrManual,arrRNPL_o);
+		ps_rho_rnpls =  pearsoncorr2(arrManual,arrRNPL_s);
+		ps_rho_rwo = pearsoncorr2(arrManual,arrRW_o);
+		ps_rho_rws = pearsoncorr2(arrManual,arrRW_s);
+		ps_rho_rso = pearsoncorr2(arrManual,arrRS_o);
+		ps_rho_rss = pearsoncorr2(arrManual,arrRS_s);
+		ps_rho_rsuo = pearsoncorr2(arrManual,arrRSU_o);
+		ps_rho_rsus  =  pearsoncorr2(arrManual,arrRSU_s);
+
+	}
+	TRACE("rho1 = %f,rho2 = %f,rho_r2o= %f,rho_r2s= %f,rho_r3o= %f,rho_r3s= %f,rho_rlo= %f,rho_rls= %f,rho_rnplo= %f,rho_rnpls= %f,rho_rwo= %f,rho_rws= %f,rho_rso= %f,rho_rss= %f,rho_rsuo= %f,rho_rsus= %f\n",
+		rho_r1o,rho_r1s,rho_r2o,rho_r2s,rho_r3o,rho_r3s,rho_rlo,rho_rls,rho_rnplo,rho_rnpls,rho_rwo,rho_rws,rho_rso,rho_rss,rho_rsuo,rho_rsus);
+	TRACE("ps_rho1 = %f,ps_rho2 = %f,ps_rho_r2o= %f,ps_rho_r2s= %f,ps_rho_r3o= %f,ps_rho_r3s= %f,ps_rho_rlo= %f,ps_rho_rls= %f,ps_rho_rnplo= %f,ps_rho_rnpls= %f,ps_rho_rwo= %f,ps_rho_rws= %f,ps_rho_rso= %f,ps_rho_rss= %f,ps_rho_rsuo= %f,ps_rho_rsus= %f\n",
+		ps_rho_r1o,ps_rho_r1s,ps_rho_r2o,ps_rho_r2s,ps_rho_r3o,ps_rho_r3s,ps_rho_rlo,ps_rho_rls,ps_rho_rnplo,ps_rho_rnpls,ps_rho_rwo,
+		ps_rho_rws,ps_rho_rso,ps_rho_rss,ps_rho_rsuo,ps_rho_rsus);
 }
