@@ -17,6 +17,10 @@ class CEvaluationSystemDlg : public CDialogEx
 public:
 	CEvaluationSystemDlg(CWnd* pParent = NULL);	// 标准构造函数
 	bool    ProcessBulk();//
+	CString m_strScoreORC2;
+	CString m_strScoreSRC2;
+	CString m_strScoreORC3;
+	CString m_strScoreSRC3;
 // 对话框数据
 	enum { IDD = IDD_EVALUATIONSYSTEM_DIALOG };
 

@@ -31,10 +31,12 @@ public:
 	void   GetScroeNAll(double &s1,double &s2, double &s3) { s1 = m_dbScoreN1; s2 = m_dbScoreN2; s3 = m_dbScoreN3;}
 	void   GetScoreLAll(double &sL,double &sNPL,double &sW) { sL = m_dbScoreL; sNPL = m_dbScoreNPL;sW = m_dbScoreW;}
 	void   GetScoreSSU(double &sS,double &sSU) {sS = m_dbScoreS; sSU = m_dbScoreSU;}
+	void   GetScoreC(double &c2, double &c3) {c2 = m_dbScoreC2; c3 = m_dbScoreC3;}
 private:
 	int **pTable,**prev,**pweight,**pTable0;
 	double    m_dbScoreN1,m_dbScoreN2,m_dbScoreN3,m_dbScoreSN1,m_dbScoreON1;//rouge_n score
 	double    m_dbScoreL,m_dbScoreNPL,m_dbScoreW,m_dbTScoreNPL,m_dbTScoreW;
 	double    m_dbScoreS,m_dbScoreSU,m_dbTScoreSU;
+	double    m_dbScoreC2,m_dbScoreC3;
 };
 

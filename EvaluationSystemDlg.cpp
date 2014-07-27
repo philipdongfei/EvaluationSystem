@@ -112,6 +112,10 @@ CEvaluationSystemDlg::CEvaluationSystemDlg(CWnd* pParent /*=NULL*/)
 	, m_strScoreSRS(_T(""))
 	, m_strScoreORSU(_T(""))
 	, m_strScoreSRSU(_T(""))
+	, m_strScoreORC2(_T(""))
+	, m_strScoreSRC2(_T(""))
+	, m_strScoreORC3(_T(""))
+	, m_strScoreSRC3(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -758,6 +762,19 @@ bool  CEvaluationSystemDlg::ProcessBulk()
 		xml.AddChildElem( "SEG",m_strScoreSR3 );
 		xml.OutOfElem();
 
+		xml.AddChildElem("ROUGE_C2");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_strScoreORC2 );
+		xml.AddChildElem( "SEG",m_strScoreSRC2 );
+		xml.OutOfElem();
+
+		xml.AddChildElem("ROUGE_C3");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_strScoreORC3);
+		xml.AddChildElem( "SEG",m_strScoreSRC3);
+		xml.OutOfElem();
+
+
 		xml.AddChildElem("ROUGEL");
 		xml.IntoElem();
 		xml.AddChildElem( "ORG", m_strScoreORL );
@@ -938,6 +955,11 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[2]; 
 
+		double c2(0),c3(0);
+		m_Rouge.GetScoreC(c2,c3);
+
+		m_strScoreORC2.Format("%.04f",c2);
+		m_strScoreORC3.Format("%.04f",c3);
 
 
 
@@ -1056,6 +1078,11 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		if (t_Score == m_strManualScore)
 			++m_dbSeg[2]; 
 
+
+		double c2(0),c3(0);
+		m_Rouge.GetScoreC(c2,c3);
+		m_strScoreSRC2.Format("%.04f",c2);
+		m_strScoreSRC3.Format("%.04f",c3);
 
 		dbScore = m_Rouge.Rouge_L(m_wstrCandidate,m_vecReference,m_bSegment);
 	/*	m_strScoreSRL.Format("%.04f",dbScore);
@@ -1251,12 +1278,12 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 		//////////spearman correlation
 		rho_r1o(0.0),rho_r1s(0.0),rho_r2o(0.0),rho_r2s(0.0),rho_r3o(0.0),rho_r3s(0.0),rho_rlo(0.0),
 		rho_rls(0.0),rho_rnplo(0.0),rho_rnpls(0.0),rho_rwo(0.0),rho_rws(0.0),rho_rso(0.0),rho_rss(0.0),
-		rho_rsuo(0.0),rho_rsus(0.0),
+		rho_rsuo(0.0),rho_rsus(0.0),rho_rc2o(0.0),rho_rc2s(0.0),rho_rc3o(0.0),rho_rc3s(0.0),
 		////////pearson correlation
 		ps_rho_r1o(0.0),ps_rho_r1s(0.0),ps_rho_r2o(0.0),ps_rho_r2s(0.0),ps_rho_r3o(0.0),ps_rho_r3s(0.0),ps_rho_rlo(0.0),
 		ps_rho_rls(0.0),ps_rho_rnplo(0.0),ps_rho_rnpls(0.0),ps_rho_rwo(0.0),ps_rho_rws(0.0),ps_rho_rso(0.0),ps_rho_rss(0.0),
-		ps_rho_rsuo(0.0),ps_rho_rsus(0.0);
-	real_1d_array arrR1_o ,arrR2_o,arrR3_o,arrRL_o,arrRNPL_o,arrRW_o,arrRS_o,arrRSU_o,arrR1_s ,arrR2_s,arrR3_s,arrRL_s,arrRNPL_s,arrRW_s,arrRS_s,arrRSU_s;
+		ps_rho_rsuo(0.0),ps_rho_rsus(0.0),ps_rho_rc2o(0.0),ps_rho_rc2s(0.0),ps_rho_rc3o(0.0),ps_rho_rc3s(0.0);
+	real_1d_array arrR1_o ,arrR2_o,arrR3_o,arrRL_o,arrRNPL_o,arrRW_o,arrRS_o,arrRSU_o,arrR1_s ,arrR2_s,arrR3_s,arrRL_s,arrRNPL_s,arrRW_s,arrRS_s,arrRSU_s,arrRC2_o,arrRC3_o,arrRC2_s,arrRC3_s;
 	arrR1_o.setlength(100) ;
 	arrR2_o.setlength(100);
 	arrR3_o.setlength(100),
@@ -1273,6 +1300,10 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 	arrRW_s.setlength(100),
 		arrRS_s.setlength(100);
 	arrRSU_s.setlength(100);
+	arrRC2_o.setlength(100);
+	arrRC3_o.setlength(100);
+	arrRC2_s.setlength(100);
+	arrRC3_s.setlength(100);
 	double     x(0),y1(0),y2(0);
 	int	 nIndex(0);
 //	double  arrManual[101],arrRouge1[101];
@@ -1331,6 +1362,36 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 				xml.OutOfElem();
 
 			}
+			
+			if( xml.FindChildElem("ROUGE_C2"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arrRC2_o(nIndex) = y1;
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arrRC2_s(nIndex) = y2;
+				xml.OutOfElem();
+
+			}
+
+			if( xml.FindChildElem("ROUGE_C3"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arrRC3_o(nIndex) = y1;
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arrRC3_s(nIndex) = y2;
+				xml.OutOfElem();
+			}
+
 		
 			///////////
 		
@@ -1432,6 +1493,12 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 		rho_r3o  = spearmancorr2(arrManual,arrR3_o);
 		rho_r3s= spearmancorr2(arrManual,arrR3_s);
 
+	
+		rho_rc2o = spearmancorr2(arrManual,arrRC2_o);
+		rho_rc2s =  spearmancorr2(arrManual,arrRC2_s);
+		rho_rc3o =  spearmancorr2(arrManual,arrRC3_o);
+		rho_rc3s = spearmancorr2(arrManual,arrRC3_s);
+
 		rho_rlo  = spearmancorr2(arrManual,arrRL_o);
 		rho_rls= spearmancorr2(arrManual,arrRL_s);
 
@@ -1453,6 +1520,10 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 		ps_rho_r2s = pearsoncorr2(arrManual,arrR2_s);
 		ps_rho_r3o=  pearsoncorr2(arrManual,arrR3_o);
 		ps_rho_r3s = pearsoncorr2(arrManual,arrR3_s);
+		ps_rho_rc2o = pearsoncorr2(arrManual,arrRC2_o);
+		ps_rho_rc2s =  pearsoncorr2(arrManual,arrRC2_s);
+		ps_rho_rc3o =  pearsoncorr2(arrManual,arrRC3_o);
+		ps_rho_rc3s = pearsoncorr2(arrManual,arrRC3_s);
 		ps_rho_rlo= pearsoncorr2(arrManual,arrRL_o);
 		ps_rho_rls = pearsoncorr2(arrManual,arrRL_s);
 		ps_rho_rnplo= pearsoncorr2(arrManual,arrRNPL_o);

@@ -19,6 +19,8 @@ CRouge::CRouge(void)
 	 m_dbScoreS = 0;
 	 m_dbScoreSU = 0;
 	 m_dbTScoreSU = 0;
+	  m_dbScoreC2 =  0;
+	  m_dbScoreC3 = 0;
 }
 
 
@@ -161,7 +163,7 @@ double CRouge::Rouge_N(std::wstring wstrCandidate,std::vector<std::wstring> vecR
 
 void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> vecReference,BOOL bSeg)//2014.07.08
 {
-	double dbScore1(0.0),dbScore2(0.0),dbScore3(0.0),t_dbScore(0.0);
+	double dbScore1(0.0),dbScore2(0.0),dbScore3(0.0),t_dbScore(0.0),a1(0),a2(0),a3(0);
 	 m_dbScoreN1 = 0;
 	 m_dbScoreN2 = 0;
 	 m_dbScoreN3 = 0;
@@ -287,6 +289,7 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 					if (dbCount_Denominator2 > 0)
 					{
 						t_dbScore = dbCount_numerator2/dbCount_Denominator2;
+						
 						if (t_dbScore > dbScore2)
 							dbScore2 = t_dbScore;
 						dbCount_numerator2 = 0;
@@ -392,7 +395,17 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 
 	m_dbScoreN1 = dbScore1;
 	m_dbScoreN2 = dbScore2;
+	a1 = 1.0/3.0;
+	a2 = 2.0/3.0;
+	a3 = 0;
+	m_dbScoreC2 = a1*dbScore1 + a2*dbScore2 + a3*dbScore3;
 	m_dbScoreN3 = dbScore3;
+	a1 = 1.0/6.0; a2 = 2.0/6.0; a3 = 3.0/6.0;
+	m_dbScoreC3 = a1*dbScore1 + a2*dbScore2 + a3*dbScore3;
+	 
+
+	
+	
 
 	if(bSeg)
 	{
