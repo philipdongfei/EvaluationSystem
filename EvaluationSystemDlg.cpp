@@ -116,6 +116,12 @@ CEvaluationSystemDlg::CEvaluationSystemDlg(CWnd* pParent /*=NULL*/)
 	, m_strScoreSRC2(_T(""))
 	, m_strScoreORC3(_T(""))
 	, m_strScoreSRC3(_T(""))
+	, m_str2gramO(_T(""))
+	, m_str2gramS(_T(""))
+	, m_str3gramO(_T(""))
+	, m_str3gramS(_T(""))
+	, m_str4gramO(_T(""))
+	, m_str4gramS(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -774,6 +780,24 @@ bool  CEvaluationSystemDlg::ProcessBulk()
 		xml.AddChildElem( "SEG",m_strScoreSRC3);
 		xml.OutOfElem();
 
+		xml.AddChildElem("N2gram");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_str2gramO);
+		xml.AddChildElem( "SEG",m_str2gramS);
+		xml.OutOfElem();
+
+		xml.AddChildElem("N3gram");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_str3gramO);
+		xml.AddChildElem( "SEG",m_str3gramS);
+		xml.OutOfElem();
+
+		xml.AddChildElem("N4gram");
+		xml.IntoElem();
+		xml.AddChildElem( "ORG", m_str4gramO);
+		xml.AddChildElem( "SEG",m_str4gramS);
+		xml.OutOfElem();
+
 
 		xml.AddChildElem("ROUGEL");
 		xml.IntoElem();
@@ -932,15 +956,15 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		m_Rouge.GetScroeNAll(s1,s2,s3);
 		m_strScoreOR1.Format("%.04f",s1);
 		if (m_strScoreOR1 == "0")
-			m_strScoreOR1 = "1";
+			m_strScoreOR1 = "0.0001";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s1)*10);
-		if (strcmp(t_Score,"0") == 0)
-			strcpy(t_Score,"1");
+	//	if (strcmp(t_Score,"0") == 0)
+	//		strcpy(t_Score,"1");
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[0]; 
 		m_strScoreOR2.Format("%.04f",s2);
 		if (m_strScoreOR2 == "0")
-			m_strScoreOR2 = "1";
+			m_strScoreOR2 = "0.0001";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s2)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -948,7 +972,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 			++m_dbRaw[1]; 
 		m_strScoreOR3.Format("%.04f",s3);
 		if (m_strScoreOR3 == "0")
-			m_strScoreOR3 = "1";
+			m_strScoreOR3 = "0.0001";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s3)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -961,6 +985,11 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		m_strScoreORC2.Format("%.04f",c2);
 		m_strScoreORC3.Format("%.04f",c3);
 
+		double Ng2(0.0),Ng3(0),Ng4(0);
+		m_Rouge.GetScoreNgram(Ng2,Ng3,Ng4);
+		 m_str2gramO.Format("%.04f",Ng2);
+		 m_str3gramO.Format("%.04f",Ng3);
+		m_str4gramO.Format("%.04f",Ng4);
 
 
 		dbScore = m_Rouge.Rouge_L(m_wstrCandidate,m_vecReference,m_bSegment);
@@ -987,7 +1016,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		m_Rouge.GetScoreLAll(sL,sNPL,sW);
 		m_strScoreORL.Format("%.04f",sL);
 		if (m_strScoreORL == "0")
-			m_strScoreORL = "1";
+			m_strScoreORL = "0.0001";
 		sprintf(t_Score,"%.0f",(sL)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -995,15 +1024,15 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 			++m_dbRaw[3]; 
 		m_strScoreORNPL.Format("%.04f",sNPL);
 		if (m_strScoreORNPL == "0")
-			m_strScoreORNPL = "1";
+			m_strScoreORNPL = "0.0001";
 		sprintf(t_Score,"%.0f",(sNPL)*10);
 		if (strcmp(t_Score,"0") == 0)
-			strcpy(t_Score,"1");
+			strcpy(t_Score,"0.0001");
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[4]; 
 		m_strScoreORW.Format("%.04f",sW);
 		if (m_strScoreORW == "0")
-			m_strScoreORW = "1";
+			m_strScoreORW = "0.0001";
 		sprintf(t_Score,"%.0f",(sW)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -1014,10 +1043,10 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		dbScore = m_Rouge.Rouge_S(m_wstrCandidate,m_vecReference,m_bSegment);
 		m_strScoreORS.Format("%.04f",dbScore);
 		if (m_strScoreORS == "0")
-			m_strScoreORS = "1";
+			m_strScoreORS = "0.0001";
 		sprintf(t_Score,"%.0f",(dbScore)*10);
 		if (strcmp(t_Score,"0") == 0)
-			strcpy(t_Score,"1");
+			strcpy(t_Score,"0.0001");
 		if (t_Score == m_strManualScore)
 			++m_dbRaw[6]; 
 
@@ -1025,7 +1054,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		m_Rouge.GetScoreSSU(sS,sSU);
 		m_strScoreORSU.Format("%.04f",sSU);
 		if (m_strScoreORSU == "0")
-			m_strScoreORSU = "1";
+			m_strScoreORSU = "0.0001";
 		sprintf(t_Score,"%.0f",(sSU)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -1055,7 +1084,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		m_Rouge.GetScroeNAll(s1,s2,s3);
 		m_strScoreSR1.Format("%.04f",s1);
 		if (m_strScoreSR1 == "0")
-			m_strScoreSR1 = "1";
+			m_strScoreSR1 = "0.0001";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s1)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -1063,7 +1092,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 			++m_dbSeg[0]; 
 		m_strScoreSR2.Format("%.04f",s2);
 		if (m_strScoreSR2 == "0")
-			m_strScoreSR2 = "1";
+			m_strScoreSR2 = "0.0001";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s2)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -1071,7 +1100,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 			++m_dbSeg[1]; 
 		m_strScoreSR3.Format("%.04f",s3);
 		if (m_strScoreSR3 == "0")
-			m_strScoreSR3 = "1";
+			m_strScoreSR3 = "0.0001";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(s3)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -1083,6 +1112,12 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		m_Rouge.GetScoreC(c2,c3);
 		m_strScoreSRC2.Format("%.04f",c2);
 		m_strScoreSRC3.Format("%.04f",c3);
+
+		double Ng2(0.0),Ng3(0),Ng4(0);
+		m_Rouge.GetScoreNgram(Ng2,Ng3,Ng4);
+		m_str2gramS.Format("%.04f",Ng2);
+		m_str3gramS.Format("%.04f",Ng3);
+		m_str4gramS.Format("%.04f",Ng4);
 
 		dbScore = m_Rouge.Rouge_L(m_wstrCandidate,m_vecReference,m_bSegment);
 	/*	m_strScoreSRL.Format("%.04f",dbScore);
@@ -1107,7 +1142,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		m_Rouge.GetScoreLAll(sL,sNPL,sW);
 		m_strScoreSRL.Format("%.04f",sL);
 		if (m_strScoreSRL == "0")
-			m_strScoreSRL = "1";
+			m_strScoreSRL = "0.0001";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(sL)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -1115,7 +1150,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 			++m_dbSeg[3]; 
 		m_strScoreSRNPL.Format("%.04f",sNPL);
 		if (m_strScoreSRNPL == "0")
-			m_strScoreSRNPL = "1";
+			m_strScoreSRNPL = "0.0001";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(sNPL)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -1123,7 +1158,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 			++m_dbSeg[4]; 
 		m_strScoreSRW.Format("%.04f",sW);
 		if (m_strScoreSRW == "0")
-			m_strScoreSRW = "1";
+			m_strScoreSRW = "0.0001";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(sW)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -1134,7 +1169,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		dbScore = m_Rouge.Rouge_S(m_wstrCandidate,m_vecReference,m_bSegment);
 		m_strScoreSRS.Format("%.04f",dbScore);
 		if (m_strScoreSRS == "0")
-			m_strScoreSRS = "1";
+			m_strScoreSRS = "0.0001";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(dbScore)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -1145,7 +1180,7 @@ void  CEvaluationSystemDlg::ComputeRough(BOOL bSegment)
 		m_Rouge.GetScoreSSU(sS,sSU);
 		m_strScoreSRSU.Format("%.04f",sSU);
 		if (m_strScoreSRSU == "0")
-			m_strScoreSRSU = "1";
+			m_strScoreSRSU = "0.0001";
 		sprintf_s(t_Score,sizeof(t_Score),"%.0f",(sSU)*10);
 		if (strcmp(t_Score,"0") == 0)
 			strcpy(t_Score,"1");
@@ -1270,7 +1305,7 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 	real_1d_array arrManual;
 	//	real_1d_array arrR1_org,arrR1_seg,arrR2_org,arrR2_seg,arrR3_org,arrR3_seg;
 	arrManual.setlength(100);
-	CMarkup  xml;
+	CMarkup  xml,correlation;
 	CString strPath(_T("")),manualscore(_T("")),score(_T(""));
 	strPath.Format(".\\sample\\result.xml");
 	double  r1_od(0.0),r1_sd(0.0),r2_od(0.0),r2_sd(0.0),r3_od(0.0),r3_sd(0.0),rL_od(0.0),rL_sd(0.0),
@@ -1279,11 +1314,15 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 		rho_r1o(0.0),rho_r1s(0.0),rho_r2o(0.0),rho_r2s(0.0),rho_r3o(0.0),rho_r3s(0.0),rho_rlo(0.0),
 		rho_rls(0.0),rho_rnplo(0.0),rho_rnpls(0.0),rho_rwo(0.0),rho_rws(0.0),rho_rso(0.0),rho_rss(0.0),
 		rho_rsuo(0.0),rho_rsus(0.0),rho_rc2o(0.0),rho_rc2s(0.0),rho_rc3o(0.0),rho_rc3s(0.0),
+		rho_2gramo(0),rho_2grams(0),rho_3gramo(0),rho_3grams(0),rho_4gramo(0),rho_4grams(0),
 		////////pearson correlation
 		ps_rho_r1o(0.0),ps_rho_r1s(0.0),ps_rho_r2o(0.0),ps_rho_r2s(0.0),ps_rho_r3o(0.0),ps_rho_r3s(0.0),ps_rho_rlo(0.0),
 		ps_rho_rls(0.0),ps_rho_rnplo(0.0),ps_rho_rnpls(0.0),ps_rho_rwo(0.0),ps_rho_rws(0.0),ps_rho_rso(0.0),ps_rho_rss(0.0),
-		ps_rho_rsuo(0.0),ps_rho_rsus(0.0),ps_rho_rc2o(0.0),ps_rho_rc2s(0.0),ps_rho_rc3o(0.0),ps_rho_rc3s(0.0);
-	real_1d_array arrR1_o ,arrR2_o,arrR3_o,arrRL_o,arrRNPL_o,arrRW_o,arrRS_o,arrRSU_o,arrR1_s ,arrR2_s,arrR3_s,arrRL_s,arrRNPL_s,arrRW_s,arrRS_s,arrRSU_s,arrRC2_o,arrRC3_o,arrRC2_s,arrRC3_s;
+		ps_rho_rsuo(0.0),ps_rho_rsus(0.0),ps_rho_rc2o(0.0),ps_rho_rc2s(0.0),ps_rho_rc3o(0.0),ps_rho_rc3s(0.0),
+		ps_rho_2gramo(0),ps_rho_2grams(0),ps_rho_3gramo(0),ps_rho_3grams(0),ps_rho_4gramo(0),ps_rho_4grams(0);
+	real_1d_array arrR1_o ,arrR2_o,arrR3_o,arrRL_o,arrRNPL_o,arrRW_o,arrRS_o,arrRSU_o,arrR1_s ,
+		arrR2_s,arrR3_s,arrRL_s,arrRNPL_s,arrRW_s,arrRS_s,arrRSU_s,arrRC2_o,arrRC3_o,arrRC2_s,arrRC3_s,
+		arr2gram_o,arr2gram_s,arr3gram_o,arr3gram_s,arr4gram_o,arr4gram_s;
 	arrR1_o.setlength(100) ;
 	arrR2_o.setlength(100);
 	arrR3_o.setlength(100),
@@ -1304,15 +1343,23 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 	arrRC3_o.setlength(100);
 	arrRC2_s.setlength(100);
 	arrRC3_s.setlength(100);
+	arr2gram_o.setlength(100);
+	arr2gram_s.setlength(100);
+	arr3gram_o.setlength(100);
+	arr3gram_s.setlength(100);
+	arr4gram_o.setlength(100);
+	arr4gram_s.setlength(100);
 	double     x(0),y1(0),y2(0);
 	int	 nIndex(0);
+	correlation.AddElem("Correlation");
+	
 //	double  arrManual[101],arrRouge1[101];
 	if(xml.Load(strPath))
 	{
 		while ( xml.FindChildElem("TEXT") )
 		{
 			manualscore = xml.GetChildAttrib("ManualScore");
-			x = atoi(manualscore);
+			x = atof(manualscore);
 			arrManual(nIndex) = x;
 			if( xml.FindChildElem("ROUGE1"))
 			{
@@ -1392,6 +1439,48 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 				xml.OutOfElem();
 			}
 
+			if( xml.FindChildElem("N2gram"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arr2gram_o(nIndex) = y1;
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arr2gram_s(nIndex) = y2;
+				xml.OutOfElem();
+			}
+
+			if( xml.FindChildElem("N3gram"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arr3gram_o(nIndex) = y1;
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arr3gram_s(nIndex) = y2;
+				xml.OutOfElem();
+			}
+
+			if( xml.FindChildElem("N4gram"))
+			{
+				xml.IntoElem();
+				xml.FindChildElem( "ORG" );
+				score = xml.GetChildData();
+				y1 = atof(score);
+				arr4gram_o(nIndex) = y1;
+				xml.FindChildElem( "SEG" );
+				score = xml.GetChildData();
+				y2 = atof(score);
+				arr4gram_s(nIndex) = y2;
+				xml.OutOfElem();
+			}
+
 		
 			///////////
 		
@@ -1409,8 +1498,8 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 				xml.OutOfElem();
 
 			}
-			rL_od += pow((x-y1),2.0);
-			rL_sd += pow((x-y2),2.0);
+	//		rL_od += pow((x-y1),2.0);
+		//	rL_sd += pow((x-y2),2.0);
 			///////////
 		
 			if( xml.FindChildElem("ROUGENPL"))
@@ -1499,6 +1588,14 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 		rho_rc3o =  spearmancorr2(arrManual,arrRC3_o);
 		rho_rc3s = spearmancorr2(arrManual,arrRC3_s);
 
+	
+		rho_2gramo = spearmancorr2(arrManual,arr2gram_o);
+		rho_2grams = spearmancorr2(arrManual,arr2gram_s);
+		rho_3gramo = spearmancorr2(arrManual,arr3gram_o);
+		rho_3grams = spearmancorr2(arrManual,arr3gram_s);
+		rho_4gramo = spearmancorr2(arrManual,arr4gram_o);
+		rho_4grams = spearmancorr2(arrManual,arr4gram_s);
+
 		rho_rlo  = spearmancorr2(arrManual,arrRL_o);
 		rho_rls= spearmancorr2(arrManual,arrRL_s);
 
@@ -1520,10 +1617,12 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 		ps_rho_r2s = pearsoncorr2(arrManual,arrR2_s);
 		ps_rho_r3o=  pearsoncorr2(arrManual,arrR3_o);
 		ps_rho_r3s = pearsoncorr2(arrManual,arrR3_s);
+
 		ps_rho_rc2o = pearsoncorr2(arrManual,arrRC2_o);
 		ps_rho_rc2s =  pearsoncorr2(arrManual,arrRC2_s);
 		ps_rho_rc3o =  pearsoncorr2(arrManual,arrRC3_o);
 		ps_rho_rc3s = pearsoncorr2(arrManual,arrRC3_s);
+
 		ps_rho_rlo= pearsoncorr2(arrManual,arrRL_o);
 		ps_rho_rls = pearsoncorr2(arrManual,arrRL_s);
 		ps_rho_rnplo= pearsoncorr2(arrManual,arrRNPL_o);
@@ -1535,10 +1634,183 @@ void CEvaluationSystemDlg::OnBnClickedBtnCorrelation()
 		ps_rho_rsuo = pearsoncorr2(arrManual,arrRSU_o);
 		ps_rho_rsus  =  pearsoncorr2(arrManual,arrRSU_s);
 
+
+		ps_rho_2gramo = pearsoncorr2(arrManual,arr2gram_o);
+		ps_rho_2grams = pearsoncorr2(arrManual,arr2gram_s);
+		ps_rho_3gramo = pearsoncorr2(arrManual,arr3gram_o);
+		ps_rho_3grams = pearsoncorr2(arrManual,arr3gram_s);
+		ps_rho_4gramo = pearsoncorr2(arrManual,arr4gram_o);
+		ps_rho_4grams = pearsoncorr2(arrManual,arr4gram_s);
+
 	}
-	TRACE("rho1 = %f,rho2 = %f,rho_r2o= %f,rho_r2s= %f,rho_r3o= %f,rho_r3s= %f,rho_rlo= %f,rho_rls= %f,rho_rnplo= %f,rho_rnpls= %f,rho_rwo= %f,rho_rws= %f,rho_rso= %f,rho_rss= %f,rho_rsuo= %f,rho_rsus= %f\n",
-		rho_r1o,rho_r1s,rho_r2o,rho_r2s,rho_r3o,rho_r3s,rho_rlo,rho_rls,rho_rnplo,rho_rnpls,rho_rwo,rho_rws,rho_rso,rho_rss,rho_rsuo,rho_rsus);
-	TRACE("ps_rho1 = %f,ps_rho2 = %f,ps_rho_r2o= %f,ps_rho_r2s= %f,ps_rho_r3o= %f,ps_rho_r3s= %f,ps_rho_rlo= %f,ps_rho_rls= %f,ps_rho_rnplo= %f,ps_rho_rnpls= %f,ps_rho_rwo= %f,ps_rho_rws= %f,ps_rho_rso= %f,ps_rho_rss= %f,ps_rho_rsuo= %f,ps_rho_rsus= %f\n",
+	
+	CString strTemp(_T(""));
+	correlation.AddChildElem("Correlation");
+	correlation.AddChildElem("ROUGE1");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_r1o);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_r1o);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_r1s);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_r1s);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+	correlation.AddChildElem("ROUGE2");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_r2o);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_r2o);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_r2s);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_r2s);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+	correlation.AddChildElem("ROUGE3");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_r3o);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_r3o);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_r3s);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_r3s);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+	correlation.AddChildElem("C2");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_rc2o);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_rc2o);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_rc2s);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_rc2s);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+	correlation.AddChildElem("C3");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_rc3o);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_rc3o);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_rc3s);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_rc3s);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+	correlation.AddChildElem("N2gram");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_2gramo);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_2gramo);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_2grams);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_2grams);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+	correlation.AddChildElem("N3gram");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_3gramo);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_3gramo);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_3grams);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_3grams);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+	correlation.AddChildElem("N4gram");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_4gramo);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_4gramo);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_4grams);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_4grams);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+	correlation.AddChildElem("RougeL");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_rlo);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_rlo);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_rls);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_rls);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+	correlation.AddChildElem("RougeNPL");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_rnplo);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_rnplo);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_rnpls);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_rnpls);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+	correlation.AddChildElem("RougeW");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_rwo);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_rwo);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_rws);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_rws);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+	correlation.AddChildElem("RougeS");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_rso);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_rso);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_rss);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_rss);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+	correlation.AddChildElem("RougeSU");
+	correlation.IntoElem();
+	strTemp.Format("%.04f",rho_rsuo);
+	correlation.AddChildElem( "SPEARMAN_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",ps_rho_rsuo);
+	correlation.AddChildElem( "PEARSON_CORR_ORG", strTemp );
+	strTemp.Format("%.04f",rho_rsus);
+	correlation.AddChildElem( "SPEARMAN_CORR_SEG",strTemp );
+	strTemp.Format("%.04f",ps_rho_rsus);
+	correlation.AddChildElem( "PEARSON_CORR_SEG",strTemp );
+	correlation.OutOfElem();
+
+
+
+	correlation.Save(".\\sample\\correlation.xml");
+
+
+
+	TRACE("rho1 = %f,rho2 = %f,rho_r2o= %f,rho_r2s= %f,rho_r3o= %f,rho_r3s= %f,rho_rlo= %f,rho_rls= %f,rho_rnplo= %f,rho_rnpls= %f,rho_rwo= %f,rho_rws= %f,rho_rso= %f,rho_rss= %f,rho_rsuo= %f,rho_rsus= %f,rho_2gramo= %f,rho_2grams= %f,rho_3gramo= %f,rho_3grams= %f,rho_4gramo= %f,rho_4grams= %f\n",
+		rho_r1o,rho_r1s,rho_r2o,rho_r2s,rho_r3o,rho_r3s,rho_rlo,rho_rls,rho_rnplo,rho_rnpls,rho_rwo,rho_rws,rho_rso,rho_rss,rho_rsuo,rho_rsus,rho_2gramo,rho_2grams,rho_3gramo,rho_3grams,rho_4gramo,rho_4grams);
+	TRACE("ps_rho1 = %f,ps_rho2 = %f,ps_rho_r2o= %f,ps_rho_r2s= %f,ps_rho_r3o= %f,ps_rho_r3s= %f,ps_rho_rlo= %f,ps_rho_rls= %f,ps_rho_rnplo= %f,ps_rho_rnpls= %f,ps_rho_rwo= %f,ps_rho_rws= %f,ps_rho_rso= %f,ps_rho_rss= %f,ps_rho_rsuo= %f,ps_rho_rsus= %f,ps_rho_2gramo= %f,ps_rho_2grams= %f,ps_rho_3gramo= %f,ps_rho_3grams= %f,ps_rho_4gramo= %f,ps_rho_4grams= %f\n",
 		ps_rho_r1o,ps_rho_r1s,ps_rho_r2o,ps_rho_r2s,ps_rho_r3o,ps_rho_r3s,ps_rho_rlo,ps_rho_rls,ps_rho_rnplo,ps_rho_rnpls,ps_rho_rwo,
-		ps_rho_rws,ps_rho_rso,ps_rho_rss,ps_rho_rsuo,ps_rho_rsus);
+		ps_rho_rws,ps_rho_rso,ps_rho_rss,ps_rho_rsuo,ps_rho_rsus,ps_rho_2gramo,ps_rho_2grams,ps_rho_3gramo,ps_rho_3grams,ps_rho_4gramo,ps_rho_4grams);
 }

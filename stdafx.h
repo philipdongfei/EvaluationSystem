@@ -39,7 +39,7 @@
 
 
 
-
+//#define   __EXCLUDE_STOPWORDS    //È¥³ýÍ£ÓÃ´Ê
 
 
 

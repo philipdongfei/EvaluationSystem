@@ -12,15 +12,18 @@ CRouge::CRouge(void)
 	m_dbScoreNPL = 0;
 	m_dbScoreW  = 0;
 	m_dbScoreS  = 0;
-	 m_dbScoreSU  = 0;
-	 m_dbTScoreSU = 0;
-	 m_dbTScoreNPL = 0;
-	 m_dbTScoreW = 0;
-	 m_dbScoreS = 0;
-	 m_dbScoreSU = 0;
-	 m_dbTScoreSU = 0;
-	  m_dbScoreC2 =  0;
-	  m_dbScoreC3 = 0;
+	m_dbScoreSU  = 0;
+	m_dbTScoreSU = 0;
+	m_dbTScoreNPL = 0;
+	m_dbTScoreW = 0;
+	m_dbScoreS = 0;
+	m_dbScoreSU = 0;
+	m_dbTScoreSU = 0;
+	m_dbScoreC2 =  0;
+	m_dbScoreC3 = 0;
+	m_db2gram = 0;
+	m_db3gram = 0;
+	m_db4gram = 0;
 }
 
 
@@ -47,9 +50,17 @@ double CRouge::Rouge_N(std::wstring wstrCandidate,std::vector<std::wstring> vecR
 				{
 					while((pos1 = wstrReference.find(L" ",pos)) != std::string::npos)
 					{
+#ifdef	__EXCLUDE_STOPWORDS
+						if ((wstrReference.substr(pos,pos1-pos).find(L"/w",0) != std::string::npos) ||
+							(wstrReference.substr(pos,pos1-pos).find(L"/e",0) != std::string::npos) ||
+							(wstrReference.substr(pos,pos1-pos).find(L"/y",0) != std::string::npos) ||
+							(wstrReference.substr(pos,pos1-pos).find(L"/o",0) != std::string::npos) ||
+							(wstrReference.substr(pos,pos1-pos).find(L"/u",0) != std::string::npos) )
 
+#else
 						size_t t_pos = wstrReference.substr(pos,pos1-pos).find(L"/w",0);
 						if (t_pos != std::string::npos)
+#endif
 						{
 							pos = pos1+1;
 							nN = nGram;
@@ -78,7 +89,16 @@ double CRouge::Rouge_N(std::wstring wstrCandidate,std::vector<std::wstring> vecR
 						}
 						
 						std::wstring  wstrSubRef = wstrReference.substr(pos,pos3-pos);
+#ifdef	__EXCLUDE_STOPWORDS
+						if ((wstrSubRef.find(L"/w",0) != std::string::npos) ||
+							(wstrSubRef.find(L"/e",0) != std::string::npos) ||
+							(wstrSubRef.find(L"/y",0) != std::string::npos) ||
+							(wstrSubRef.find(L"/o",0) != std::string::npos) ||
+							(wstrSubRef.find(L"/u",0) != std::string::npos) )
+
+#else
 						if (wstrSubRef.find(L"/w",0) != std::string::npos)
+#endif
 						{
 							pos = pos1+1;
 							nN = nGram;
@@ -124,6 +144,11 @@ double CRouge::Rouge_N(std::wstring wstrCandidate,std::vector<std::wstring> vecR
 					for(int nCIndex=0; nCIndex < (int)wstrReference.size()-nGram+1; nCIndex++)
 					{
 						std::wstring  wstrSubRef = wstrReference.substr(nCIndex,nGram);
+						if (IsPunctuation(wstrSubRef))
+						{
+							--dbCount_Denominator;
+							continue;
+						}
 						if((pos1 = wstrCandidate.find(wstrSubRef,pos)) !=std::string::npos)//出现最大次数
 						{
 							++dbCount_numerator;
@@ -163,14 +188,16 @@ double CRouge::Rouge_N(std::wstring wstrCandidate,std::vector<std::wstring> vecR
 
 void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> vecReference,BOOL bSeg)//2014.07.08
 {
-	double dbScore1(0.0),dbScore2(0.0),dbScore3(0.0),t_dbScore(0.0),a1(0),a2(0),a3(0);
+	double dbScore1(0.0),dbScore2(0.0),dbScore3(0.0),dbScore4(0.0),t_dbScore(0.0),a1(0),a2(0),a3(0);
 	 m_dbScoreN1 = 0;
 	 m_dbScoreN2 = 0;
 	 m_dbScoreN3 = 0;
-	double dbCount_Denominator1(0.0),dbCount_numerator1(0.0),dbCount_Denominator2(0.0),dbCount_numerator2(0.0),dbCount_Denominator3(0.0),dbCount_numerator3(0.0);//分母，分子
-	int nN1 = 1,nN2 = 2,nN3 = 3,nGram1 = 1, nGram2 = 2, nGram3 = 3;
+	 m_dbScoreN4 = 0;
+	double dbCount_Denominator1(0.0),dbCount_numerator1(0.0),dbCount_Denominator2(0.0),dbCount_numerator2(0.0),
+		dbCount_Denominator3(0.0),dbCount_numerator3(0.0),dbCount_Denominator4(0.0),dbCount_numerator4(0.0);//分母，分子
+	int nN1 = 1,nN2 = 2,nN3 = 3,nN4 = 4,nGram1 = 1, nGram2 = 2, nGram3 = 3,nGram4 = 4;
 	size_t pos(0), pos1(0),pos2(0),pos3(0);
-	std::wstring  wstrSubRef1,wstrSubRef2,wstrSubRef3;
+	std::wstring  wstrSubRef1,wstrSubRef2,wstrSubRef3,wstrSubRef4;
 	if (bSeg)//词为单位
 	{
 		if (vecReference.size() > 0)
@@ -182,30 +209,46 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 				{
 					while((pos1 = wstrReference.find(L" ",pos)) != std::string::npos)
 					{
+#ifdef	__EXCLUDE_STOPWORDS
+						if ((wstrReference.substr(pos,pos1-pos).find(L"/w",0) != std::string::npos) ||
+							(wstrReference.substr(pos,pos1-pos).find(L"/e",0) != std::string::npos) ||
+							(wstrReference.substr(pos,pos1-pos).find(L"/y",0) != std::string::npos) ||
+							(wstrReference.substr(pos,pos1-pos).find(L"/o",0) != std::string::npos) ||
+							(wstrReference.substr(pos,pos1-pos).find(L"/u",0) != std::string::npos) )
 
+#else
 						size_t t_pos = wstrReference.substr(pos,pos1-pos).find(L"/w",0);
 						if (t_pos != std::string::npos)
+#endif
 						{
 							pos = pos1+1;
 							nN1 = nGram1;
 							nN2 = nGram2;
 							nN3 = nGram3;
+							nN4 = nGram4;
 							continue;
 						}
 						
 						--nN1;
 						--nN2;
 						--nN3;
+						--nN4;
 						wstrSubRef1 = wstrReference.substr(pos,pos1-pos);
-						if (nN3 > 0)
+					//	if (nN3 > 0)
+						if (nN4 > 0)
 						{
 							pos2 = pos1+1;
-							for (;nN3 > 0;nN3--,nN2--)
+						//	for (;nN3 > 0;nN3--,nN2--)
+							for (;nN4 > 0; nN4--,nN3--,nN2--)
 							{
 								
 								if (nN2 == 0)
 								{
 									wstrSubRef2 = wstrReference.substr(pos,pos3-pos);
+								}
+								if (nN3 == 0)
+								{
+									wstrSubRef3 = wstrReference.substr(pos,pos3-pos);
 								}
 								pos3 = wstrReference.find(L" ",pos2);
 								if (pos3 < 0)
@@ -213,7 +256,7 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 								pos2 = pos3+1;
 								
 							}
-							if (nN3> 0)
+							if (nN4> 0)
 								break;
 
 						}
@@ -222,14 +265,24 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 							pos3 = pos1;
 						}
 						
-						wstrSubRef3 = wstrReference.substr(pos,pos3-pos);
+						wstrSubRef4 = wstrReference.substr(pos,pos3-pos);
 						////////N = 1
+#ifdef	__EXCLUDE_STOPWORDS
+						if ((wstrSubRef1.find(L"/w",0) != std::string::npos) ||
+							(wstrSubRef1.find(L"/e",0) != std::string::npos) ||
+							(wstrSubRef1.find(L"/y",0) != std::string::npos) ||
+							(wstrSubRef1.find(L"/o",0) != std::string::npos) ||
+							(wstrSubRef1.find(L"/u",0) != std::string::npos) )
+
+#else
 						if (wstrSubRef1.find(L"/w",0) != std::string::npos)
+#endif
 						{
 							pos = pos1+1;
 							nN1 = nGram1;
 							nN2 = nGram2;
 							nN3 = nGram3;
+							nN4 = nGram4;
 							continue;
 						}
 						++dbCount_Denominator1;
@@ -240,12 +293,22 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 						//	pos2 = pos3+wstrSubRef.size();
 						}
 						////////////////N=2
+#ifdef	__EXCLUDE_STOPWORDS
+						if ((wstrSubRef2.find(L"/w",0) != std::string::npos) ||
+							(wstrSubRef2.find(L"/e",0) != std::string::npos) ||
+							(wstrSubRef2.find(L"/y",0) != std::string::npos) ||
+							(wstrSubRef2.find(L"/o",0) != std::string::npos) ||
+							(wstrSubRef2.find(L"/u",0) != std::string::npos) )
+
+#else
 						if (wstrSubRef2.find(L"/w",0) != std::string::npos)
+#endif
 						{
 							pos = pos1+1;
 							nN1 = nGram1;
 							nN2 = nGram2;
 							nN3 = nGram3;
+							nN4 = nGram4;
 							continue;
 						}
 						++dbCount_Denominator2;
@@ -256,12 +319,22 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 						//	pos2 = pos3+wstrSubRef.size();
 						}
 						///////////////////N = 3
+#ifdef	__EXCLUDE_STOPWORDS
+						if ((wstrSubRef3.find(L"/w",0) != std::string::npos) ||
+							(wstrSubRef3.find(L"/e",0) != std::string::npos) ||
+							(wstrSubRef3.find(L"/y",0) != std::string::npos) ||
+							(wstrSubRef3.find(L"/o",0) != std::string::npos) ||
+							(wstrSubRef3.find(L"/u",0) != std::string::npos) )
+
+#else
 						if (wstrSubRef3.find(L"/w",0) != std::string::npos)
+#endif
 						{
 							pos = pos1+1;
 							nN1 = nGram1;
 							nN2 = nGram2;
 							nN3 = nGram3;
+							nN4 = nGram4;
 							continue;
 						}
 						++dbCount_Denominator3;
@@ -270,12 +343,40 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 						{
 							++dbCount_numerator3;
 						//	pos2 = pos3+wstrSubRef.size();
-						}				
+						}	
+						///////////////////N = 4;
+#ifdef	__EXCLUDE_STOPWORDS
+						if ((wstrSubRef4.find(L"/w",0) != std::string::npos) ||
+							(wstrSubRef4.find(L"/e",0) != std::string::npos) ||
+							(wstrSubRef4.find(L"/y",0) != std::string::npos) ||
+							(wstrSubRef4.find(L"/o",0) != std::string::npos) ||
+							(wstrSubRef4.find(L"/u",0) != std::string::npos) )
+
+#else
+						if (wstrSubRef4.find(L"/w",0) != std::string::npos)
+#endif
+						{
+							pos = pos1+1;
+							nN1 = nGram1;
+							nN2 = nGram2;
+							nN3 = nGram3;
+							nN4 = nGram4;
+							continue;
+						}
+						++dbCount_Denominator4;
+						pos3 = pos2 = 0;
+						if((pos3 = wstrCandidate.find(wstrSubRef4,pos2)) != std::string::npos)//出现次数
+						{
+							++dbCount_numerator4;
+						//	pos2 = pos3+wstrSubRef.size();
+						}	
+						///////////
 
 						pos = pos1+1;
 						nN1 = nGram1;
 						nN2 = nGram2;
 						nN3 = nGram3;
+						nN4 = nGram4;
 					}
 					if (dbCount_Denominator1 > 0)
 					{
@@ -306,6 +407,16 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 						dbCount_Denominator3 = 0;
 
 					}
+					if (dbCount_Denominator4 > 0)
+					{
+						t_dbScore = dbCount_numerator4/dbCount_Denominator4;
+						if (t_dbScore > dbScore4)
+							dbScore4 = t_dbScore;
+						dbCount_numerator4 = 0;
+						dbCount_Denominator4 = 0;
+
+					}
+
 
 				}
 			}
@@ -324,10 +435,19 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 					dbCount_Denominator1 = (wstrReference.size()-nGram1+1);
 					dbCount_Denominator2 = (wstrReference.size()-nGram2+1);
 					dbCount_Denominator3 = (wstrReference.size()-nGram3+1);
+					dbCount_Denominator4 = (wstrReference.size()-nGram4+1);
 					pos = pos1 = 0;
 					for(int nCIndex=0; nCIndex < (int)wstrReference.size()-nGram1+1; nCIndex++)
 					{
 						wstrSubRef1 = wstrReference.substr(nCIndex,nGram1);
+						if (IsPunctuation(wstrSubRef1))
+						{
+					//		--dbCount_Denominator1;
+					//		--dbCount_Denominator2;
+					//		--dbCount_Denominator3;
+					//		--dbCount_Denominator4;
+							continue;
+						}
 						if((pos1 = wstrCandidate.find(wstrSubRef1,pos)) !=std::string::npos)//出现最大次数
 						{
 							++dbCount_numerator1;
@@ -335,6 +455,14 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 						if ((nCIndex+nGram2) <= (int)wstrReference.size())
 						{
 						wstrSubRef2 = wstrReference.substr(nCIndex,nGram2);
+						if (IsPunctuation(wstrSubRef2))
+						{
+							
+						//	--dbCount_Denominator2;
+						//	--dbCount_Denominator3;
+						//	--dbCount_Denominator4;
+							continue;
+						}
 						if((pos1 = wstrCandidate.find(wstrSubRef2,pos)) !=std::string::npos)//出现最大次数
 						{
 							++dbCount_numerator2;
@@ -348,6 +476,13 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 						if ((nCIndex+nGram3) <= (int)wstrReference.size())
 						{
 							wstrSubRef3 = wstrReference.substr(nCIndex,nGram3);
+							if (IsPunctuation(wstrSubRef3))
+							{
+								
+						//		--dbCount_Denominator3;
+						//		--dbCount_Denominator4;
+								continue;
+							}
 							if((pos1 = wstrCandidate.find(wstrSubRef3,pos)) !=std::string::npos)//出现最大次数
 							{
 								++dbCount_numerator3;
@@ -358,6 +493,27 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 						{
 							TRACE("N3 is end\n");
 						}
+
+						if ((nCIndex+nGram4) <= (int)wstrReference.size())
+						{
+							wstrSubRef4 = wstrReference.substr(nCIndex,nGram4);
+							if (IsPunctuation(wstrSubRef4))
+							{
+								
+							//	--dbCount_Denominator4;
+								continue;
+							}
+							if((pos1 = wstrCandidate.find(wstrSubRef4,pos)) !=std::string::npos)//出现最大次数
+							{
+								++dbCount_numerator4;
+					
+							}
+						}
+						else
+						{
+							TRACE("N4 is end\n");
+						}
+
 					}
 
 					if (dbCount_Denominator1 > 0)
@@ -385,6 +541,16 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 						dbCount_Denominator3 = 0;
 					}
 
+					if (dbCount_Denominator4 > 0)
+					{
+						t_dbScore = dbCount_numerator4/dbCount_Denominator4;
+						if (t_dbScore > dbScore4)
+							dbScore4 = t_dbScore;
+						dbCount_numerator4 = 0;
+						dbCount_Denominator4 = 0;
+					}
+
+
 				}
 
 			}
@@ -402,10 +568,25 @@ void CRouge::Rouge_N_All(std::wstring wstrCandidate,std::vector<std::wstring> ve
 	m_dbScoreN3 = dbScore3;
 	a1 = 1.0/6.0; a2 = 2.0/6.0; a3 = 3.0/6.0;
 	m_dbScoreC3 = a1*dbScore1 + a2*dbScore2 + a3*dbScore3;
+	m_dbScoreN4 = dbScore4;
 	 
+	
+	double Wn = 1.0/2.0;
+	double t_dbScoreN1(m_dbScoreN1),t_dbScoreN2(m_dbScoreN2),t_dbScoreN3(m_dbScoreN3),t_dbScoreN4(m_dbScoreN4);
+	if (t_dbScoreN1 == 0)
+		t_dbScoreN1 = 0.0;
+	if (t_dbScoreN2 == 0.0)
+		t_dbScoreN2 = 0.0;
+	if (t_dbScoreN3 == 0.0)
+		t_dbScoreN3 = 0.0;
+	if (t_dbScoreN4 == 0.0)
+		t_dbScoreN4 = 0.0;
 
-	
-	
+	m_db2gram = exp(Wn*(log(t_dbScoreN1) + log(t_dbScoreN2) ));
+	Wn = 1.0/3.0;
+	m_db3gram =  exp(Wn*(log(t_dbScoreN1) + log(t_dbScoreN2) + log(t_dbScoreN3)));
+	Wn = 1.0/4.0;
+	m_db4gram  = exp(Wn*(log(t_dbScoreN1) + log(t_dbScoreN2) + log(t_dbScoreN3) + log(t_dbScoreN4)));
 
 	if(bSeg)
 	{
@@ -1211,8 +1392,17 @@ std::vector<std::wstring> CRouge::GetLCS(double &lcs,double &mR,double &nC,std::
 		while((pos1 = wstrCandidate.find(L" ",pos)) != std::string::npos)
 		{
 
+#ifdef	__EXCLUDE_STOPWORDS
+			if ((wstrCandidate.substr(pos,pos1-pos).find(L"/w",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/e",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/y",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/o",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/u",0) != std::string::npos) )
+
+#else
 			size_t t_pos = wstrCandidate.substr(pos,pos1-pos).find(L"/w",0);
 			if (t_pos != std::string::npos)
+#endif
 			{
 				pos = pos1+1;
 
@@ -1233,9 +1423,17 @@ std::vector<std::wstring> CRouge::GetLCS(double &lcs,double &mR,double &nC,std::
 
 		while((pos1 = wstrReference.find(L" ",pos)) != std::string::npos)
 		{
+#ifdef	__EXCLUDE_STOPWORDS
+			if ((wstrReference.substr(pos,pos1-pos).find(L"/w",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/e",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/y",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/o",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/u",0) != std::string::npos) )
 
+#else
 			size_t t_pos = wstrReference.substr(pos,pos1-pos).find(L"/w",0);
 			if (t_pos != std::string::npos)
+#endif
 			{
 				pos = pos1+1;
 
@@ -1261,7 +1459,10 @@ std::vector<std::wstring> CRouge::GetLCS(double &lcs,double &mR,double &nC,std::
 		for(std::vector<std::wstring>::size_type ix=0; ix != wstrCandidate.size(); ++ix)
 		{
 			wstrTemp = wstrCandidate.at(ix);
+
 			if (wstrPunctuation.find(wstrTemp,0) != std::string::npos || wstrTemp.at(0) == 13)
+				continue;
+			if (IsPunctuation(wstrTemp))
 				continue;
 			m_vectCandidate.push_back(wstrTemp);
 			if (ix == 0)
@@ -1273,6 +1474,8 @@ std::vector<std::wstring> CRouge::GetLCS(double &lcs,double &mR,double &nC,std::
 		{
 			wstrTemp = wstrReference.at(ir);
 			if (wstrPunctuation.find(wstrTemp,0) != std::string::npos || wstrTemp.at(0) == 13)
+				continue;
+			if (IsPunctuation(wstrTemp))
 				continue;
 			m_vectReference.push_back(wstrTemp);
 			if (ir == 0)
@@ -1371,9 +1574,18 @@ void CRouge::GetWLCS(double &wlcs,double &mR,double &nC,std::wstring  &wstrCandi
 
 		while((pos1 = wstrCandidate.find(L" ",pos)) != std::string::npos)
 		{
+#ifdef	__EXCLUDE_STOPWORDS
+			if ((wstrCandidate.substr(pos,pos1-pos).find(L"/w",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/e",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/y",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/o",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/u",0) != std::string::npos) )
 
+#else
 			size_t t_pos = wstrCandidate.substr(pos,pos1-pos).find(L"/w",0);
+
 			if (t_pos != std::string::npos)
+#endif
 			{
 				pos = pos1+1;
 
@@ -1394,9 +1606,17 @@ void CRouge::GetWLCS(double &wlcs,double &mR,double &nC,std::wstring  &wstrCandi
 
 		while((pos1 = wstrReference.find(L" ",pos)) != std::string::npos)
 		{
+#ifdef	__EXCLUDE_STOPWORDS
+			if ((wstrReference.substr(pos,pos1-pos).find(L"/w",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/e",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/y",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/o",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/u",0) != std::string::npos) )
 
+#else
 			size_t t_pos = wstrReference.substr(pos,pos1-pos).find(L"/w",0);
 			if (t_pos != std::string::npos)
+#endif
 			{
 				pos = pos1+1;
 
@@ -1424,6 +1644,8 @@ void CRouge::GetWLCS(double &wlcs,double &mR,double &nC,std::wstring  &wstrCandi
 			wstrTemp = wstrCandidate.at(ix);
 			if (wstrPunctuation.find(wstrTemp,0) != std::string::npos || wstrTemp.at(0) == 13)
 				continue;
+			if (IsPunctuation(wstrTemp))
+				continue;
 			m_vectCandidate.push_back(wstrTemp);
 			if (ix == 0)
 				m_vectCandidate.push_back(wstrTemp);
@@ -1434,6 +1656,8 @@ void CRouge::GetWLCS(double &wlcs,double &mR,double &nC,std::wstring  &wstrCandi
 		{
 			wstrTemp = wstrReference.at(ir);
 			if (wstrPunctuation.find(wstrTemp,0) != std::string::npos || wstrTemp.at(0) == 13)
+				continue;
+			if (IsPunctuation(wstrTemp))
 				continue;
 			m_vectReference.push_back(wstrTemp);
 			if (ir == 0)
@@ -1533,9 +1757,17 @@ std::vector<std::wstring> CRouge::GetWLLCS(double &lcs,double &mR,double &nC,dou
 
 		while((pos1 = wstrCandidate.find(L" ",pos)) != std::string::npos)
 		{
+#ifdef	__EXCLUDE_STOPWORDS
+			if ((wstrCandidate.substr(pos,pos1-pos).find(L"/w",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/e",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/y",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/o",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/u",0) != std::string::npos) )
 
+#else
 			size_t t_pos = wstrCandidate.substr(pos,pos1-pos).find(L"/w",0);
 			if (t_pos != std::string::npos)
+#endif
 			{
 				pos = pos1+1;
 
@@ -1556,9 +1788,17 @@ std::vector<std::wstring> CRouge::GetWLLCS(double &lcs,double &mR,double &nC,dou
 
 		while((pos1 = wstrReference.find(L" ",pos)) != std::string::npos)
 		{
+#ifdef	__EXCLUDE_STOPWORDS
+			if ((wstrReference.substr(pos,pos1-pos).find(L"/w",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/e",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/y",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/o",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/u",0) != std::string::npos) )
 
+#else
 			size_t t_pos = wstrReference.substr(pos,pos1-pos).find(L"/w",0);
 			if (t_pos != std::string::npos)
+#endif
 			{
 				pos = pos1+1;
 
@@ -1586,6 +1826,8 @@ std::vector<std::wstring> CRouge::GetWLLCS(double &lcs,double &mR,double &nC,dou
 			wstrTemp = wstrCandidate.at(ix);
 			if (wstrPunctuation.find(wstrTemp,0) != std::string::npos || wstrTemp.at(0) == 13)
 				continue;
+			if (IsPunctuation(wstrTemp))
+				continue;
 			m_vectCandidate.push_back(wstrTemp);
 		//	if (ix == 0)
 		//		m_vectCandidate.push_back(wstrTemp);
@@ -1596,6 +1838,8 @@ std::vector<std::wstring> CRouge::GetWLLCS(double &lcs,double &mR,double &nC,dou
 		{
 			wstrTemp = wstrReference.at(ir);
 			if (wstrPunctuation.find(wstrTemp,0) != std::string::npos || wstrTemp.at(0) == 13)
+				continue;
+			if (IsPunctuation(wstrTemp))
 				continue;
 			m_vectReference.push_back(wstrTemp);
 		//	if (ir == 0)
@@ -1766,9 +2010,17 @@ void CRouge::GetSKIP2(long &skip2,long &mR,long &nC,std::wstring  &wstrCandidate
 
 		while((pos1 = wstrCandidate.find(L" ",pos)) != std::string::npos)
 		{
+#ifdef	__EXCLUDE_STOPWORDS
+			if ((wstrCandidate.substr(pos,pos1-pos).find(L"/w",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/e",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/y",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/o",0) != std::string::npos) ||
+				(wstrCandidate.substr(pos,pos1-pos).find(L"/u",0) != std::string::npos) )
 
+#else
 			size_t t_pos = wstrCandidate.substr(pos,pos1-pos).find(L"/w",0);
 			if (t_pos != std::string::npos)
+#endif
 			{
 				pos = pos1+1;
 
@@ -1789,9 +2041,17 @@ void CRouge::GetSKIP2(long &skip2,long &mR,long &nC,std::wstring  &wstrCandidate
 
 		while((pos1 = wstrReference.find(L" ",pos)) != std::string::npos)
 		{
+#ifdef	__EXCLUDE_STOPWORDS
+			if ((wstrReference.substr(pos,pos1-pos).find(L"/w",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/e",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/y",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/o",0) != std::string::npos) ||
+				(wstrReference.substr(pos,pos1-pos).find(L"/u",0) != std::string::npos) )
 
+#else
 			size_t t_pos = wstrReference.substr(pos,pos1-pos).find(L"/w",0);
 			if (t_pos != std::string::npos)
+#endif
 			{
 				pos = pos1+1;
 
@@ -1819,6 +2079,8 @@ void CRouge::GetSKIP2(long &skip2,long &mR,long &nC,std::wstring  &wstrCandidate
 			wstrTemp = wstrCandidate.at(ix);
 			if (wstrPunctuation.find(wstrTemp,0) != std::string::npos || wstrTemp.at(0) == 13)
 				continue;
+			if (IsPunctuation(wstrTemp))
+				continue;
 			m_vectCandidate.push_back(wstrTemp);
 		}
 		wstrTemp = wstrReference.at(0);
@@ -1827,6 +2089,8 @@ void CRouge::GetSKIP2(long &skip2,long &mR,long &nC,std::wstring  &wstrCandidate
 		{
 			wstrTemp = wstrReference.at(ir);
 			if (wstrPunctuation.find(wstrTemp,0) != std::string::npos || wstrTemp.at(0) == 13)
+				continue;
+			if (IsPunctuation(wstrTemp))
 				continue;
 			m_vectReference.push_back(wstrTemp);
 		}
@@ -1911,4 +2175,19 @@ void CRouge::GetSKIP2(long &skip2,long &mR,long &nC,std::wstring  &wstrCandidate
 
 	
 
+}
+
+bool  CRouge::IsPunctuation(std::wstring  ch)
+{
+	bool bRet(false);
+	if ((ch.find(L",") != std::wstring::npos) //|| (ch.find(L".") != std::wstring::npos) 
+		|| (ch.find(L"!") != std::wstring::npos) || (ch.find(L"(") != std::wstring::npos)
+		|| (ch.find( L")")!= std::wstring::npos) || (ch.find( L"?") != std::wstring::npos)
+		|| (ch.find( L"。") != std::wstring::npos) || (ch.find( L"，") != std::wstring::npos)
+		|| (ch.find( L"！") != std::wstring::npos) || (ch.find( L"？") != std::wstring::npos)
+		|| (ch.find( L"（")!= std::wstring::npos) || (ch.find( L"）") != std::wstring::npos))
+	{
+		bRet = true;
+	}
+	return bRet;
 }

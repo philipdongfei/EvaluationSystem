@@ -1,0 +1,71 @@
+rho1 = 0.580269,rho2 = 0.580269,
+rho_r2o= 0.570841,rho_r2s= 0.503054,
+rho_r3o= 0.536053,rho_r3s= 0.435038,
+rho_rlo= 0.291626,rho_rls= 0.311637,
+rho_rnplo= 0.334962,rho_rnpls= 0.344352,
+rho_rwo= 0.339900,rho_rws= 0.350558,
+rho_rso= 0.359645,rho_rss= 0.340011,
+rho_rsuo= 0.365194,rho_rsus= 0.336530
+
+
+ps_rho1 = 0.600782,ps_rho2 = 0.600782,
+ps_rho_r2o= 0.597569,ps_rho_r2s= 0.521832,
+ps_rho_r3o= 0.552316,ps_rho_r3s= 0.453480,
+ps_rho_rlo= 0.320420,ps_rho_rls= 0.334362,
+ps_rho_rnplo= 0.357632,ps_rho_rnpls= 0.368413,
+ps_rho_rwo= 0.350535,ps_rho_rws= 0.370408,
+ps_rho_rso= 0.377972,ps_rho_rss= 0.352781,
+ps_rho_rsuo= 0.382539,ps_rho_rsus= 0.350579
+
+
+rho1 = 0.720512,rho2 = 0.720512,
+rho_r2o= 0.723268,rho_r2s= 0.684128,
+rho_r3o= 0.711335,rho_r3s= 0.613827,
+rho_rlo= 0.554341,rho_rls= 0.548250,
+rho_rnplo= 0.583598,rho_rnpls= 0.590746,
+rho_rwo= 0.569405,rho_rws= 0.559407,
+rho_rso= 0.616089,rho_rss= 0.578129,
+rho_rsuo= 0.618929,rho_rsus= 0.562208
+
+ps_rho1 = 0.727185,ps_rho2 = 0.727185,
+ps_rho_r2o= 0.729352,ps_rho_r2s= 0.671514,
+ps_rho_r3o= 0.697739,ps_rho_r3s= 0.601749,
+ps_rho_rlo= 0.554434,ps_rho_rls= 0.550019,
+ps_rho_rnplo= 0.583762,ps_rho_rnpls= 0.589073,
+ps_rho_rwo= 0.537585,ps_rho_rws= 0.541550,
+ps_rho_rso= 0.606462,ps_rho_rss= 0.565078,
+ps_rho_rsuo= 0.609279,ps_rho_rsus= 0.554275
+
+rho1 = 0.720512,rho2 = 0.720512,
+rho_r2o= 0.723268,rho_r2s= 0.684128,
+rho_r3o= 0.711335,rho_r3s= 0.613827,
+rho_rlo= 0.554341,rho_rls= 0.548250,rho_rnplo= 0.583598,rho_rnpls= 0.590746,rho_rwo= 0.569405,rho_rws= 0.559407,rho_rso= 0.616089,rho_rss= 0.578129,rho_rsuo= 0.618929,rho_rsus= 0.562208
+ps_rho1 = 0.727185,ps_rho2 = 0.727185,
+ps_rho_r2o= 0.729352,ps_rho_r2s= 0.671514,
+ps_rho_r3o= 0.697739,ps_rho_r3s= 0.601749,
+ps_rho_rlo= 0.554434,ps_rho_rls= 0.550019,ps_rho_rnplo= 0.583762,ps_rho_rnpls= 0.589073,ps_rho_rwo= 0.537585,ps_rho_rws= 0.541550,ps_rho_rso= 0.606462,ps_rho_rss= 0.565078,ps_rho_rsuo= 0.609279,ps_rho_rsus= 0.554275
+
+
+rho1 = 0.720512,rho2 = 0.720512,
+rho_r2o= 0.727916,rho_r2s= 0.707838,
+rho_r3o= 0.725267,rho_r3s= 0.677392,
+rho_rlo= 0.554341,rho_rls= 0.548250,rho_rnplo= 0.583598,rho_rnpls= 0.590746,rho_rwo= 0.569405,rho_rws= 0.559407,rho_rso= 0.616089,rho_rss= 0.578129,rho_rsuo= 0.618929,rho_rsus= 0.562208
+ps_rho1 = 0.727185,ps_rho2 = 0.727185,
+ps_rho_r2o= 0.734868,ps_rho_r2s= 0.692838,
+ps_rho_r3o= 0.721901,ps_rho_r3s= 0.651822,
+ps_rho_rlo= 0.554434,ps_rho_rls= 0.550019,ps_rho_rnplo= 0.583762,ps_rho_rnpls= 0.589073,ps_rho_rwo= 0.537585,ps_rho_rws= 0.541550,ps_rho_rso= 0.606462,ps_rho_rss= 0.565078,ps_rho_rsuo= 0.609279,ps_rho_rsus= 0.554275
+
+rho1 = 0.720512,rho2 = 0.720512,rho_r2o= 0.728124,rho_r2s= 0.490983,rho_r3o= 0.574163,rho_r3s= 0.164841,rho_rlo= 0.554341,rho_rls= 0.548250,rho_rnplo= 0.583598,rho_rnpls= 0.590746,rho_rwo= 0.569405,rho_rws= 0.559407,rho_rso= 0.616089,rho_rss= 0.578129,rho_rsuo= 0.618929,rho_rsus= 0.562208,
+rho_2gramo= 0.731591,rho_2grams= 0.674267,
+rho_3gramo= 0.735607,rho_3grams= 0.576467,
+rho_4gramo= 0.705837,rho_4grams= 0.576390
+ps_rho1 = 0.727185,ps_rho2 = 0.727185,ps_rho_r2o= 0.738177,ps_rho_r2s= 0.457535,ps_rho_r3o= 0.520599,ps_rho_r3s= 0.110169,ps_rho_rlo= 0.554434,ps_rho_rls= 0.550019,ps_rho_rnplo= 0.583762,ps_rho_rnpls= 0.589073,ps_rho_rwo= 0.537585,ps_rho_rws= 0.541550,ps_rho_rso= 0.606462,ps_rho_rss= 0.565078,ps_rho_rsuo= 0.609279,ps_rho_rsus= 0.554275,
+ps_rho_2gramo= 0.750076,ps_rho_2grams= 0.658897,
+ps_rho_3gramo= 0.705977,ps_rho_3grams= 0.539357,
+ps_rho_4gramo= 0.697484,ps_rho_4grams= 0.572697
+
+
+
+
+
+

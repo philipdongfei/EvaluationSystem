@@ -76,6 +76,13 @@ public:
 	CString m_strScoreSRS;
 	CString m_strScoreORSU;
 	CString m_strScoreSRSU;
+	CString m_str2gramO;
+	CString m_str2gramS;
+	CString m_str3gramO;
+	CString m_str3gramS;
+	CString m_str4gramO;
+	CString m_str4gramS;
+
 
 	double  m_dbRaw[8];
 	double  m_dbSeg[8];
