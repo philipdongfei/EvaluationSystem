@@ -39,7 +39,8 @@
 
 
 
-//#define   __EXCLUDE_STOPWORDS    //去除停用词
+#define   __EXCLUDE_STOPWORDS    //去除停用词
+//#define    __UNIT_HALF_SENT         //以半句为单位计算
 
 
 

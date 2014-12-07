@@ -1,7 +1,30 @@
 #include<string>
 #include <vector>
+#include "Similarity.h"
 
 #pragma once
+
+class WordFrequency
+{
+public:
+	WordFrequency()
+	{
+		wstrWord.empty();
+		nFreqCandidate = 0;
+		nFreqReference = 0;
+		dbWCandidate = 0.0;
+		dbWReference = 0.0;
+	}
+	std::wstring  wstrWord;
+	int   nFreqCandidate;//∫Ú—°æ‰÷–¥ ∆µ
+	int   nFreqReference;//≤Œøºæ‰÷–¥ ∆µ
+	double dbWCandidate;//weight word in the candiate sentence
+	double dbWReference;//weight word in the reference sentence
+	bool operator==(const WordFrequency& c) const
+	{
+		return c.wstrWord == wstrWord;
+	}
+};
 
 class CRouge
 {
@@ -33,7 +56,9 @@ public:
 	void   GetScoreSSU(double &sS,double &sSU) {sS = m_dbScoreS; sSU = m_dbScoreSU;}
 	void   GetScoreC(double &c2, double &c3) {c2 = m_dbScoreC2; c3 = m_dbScoreC3;}
 	void   GetScoreNgram(double &N2, double &N3, double &N4){N2 = m_db2gram; N3 = m_db3gram; N4 = m_db4gram;}
+	void   GetScoreRL(double &RL, double &RNPL, double &RW){RL = m_dbScoreRL; RNPL = m_dbScoreRNPL; RW =m_dbScoreRW; }
 	bool   IsPunctuation(std::wstring  ch);// is punctuation?
+	double GetSimCos(){return m_dbSimCos;}
 private:
 	int **pTable,**prev,**pweight,**pTable0;
 	double    m_dbScoreN1,m_dbScoreN2,m_dbScoreN3,m_dbScoreN4,m_dbScoreSN1,m_dbScoreON1;//rouge_n score
@@ -41,5 +66,13 @@ private:
 	double    m_dbScoreS,m_dbScoreSU,m_dbTScoreSU;
 	double    m_dbScoreC2,m_dbScoreC3;
 	double    m_db2gram,m_db3gram,m_db4gram;
+	double    m_dbScoreRL,m_dbScoreRNPL,m_dbScoreRW;
+	Similarity    m_Similarity;
+	std::vector<WordFrequency>   m_vectorCosine,m_vectorFrequencyN2,m_vectorFrequencyN3,m_vectorFrequencyN4;
+	std::vector<std::wstring>         m_vectorN1,m_vectorN2,m_vectorN3,m_vectorN4,m_vectorLCS,m_vectorSKIP2;
+	double m_dbScoreN1TF,m_dbScoreN2TF,m_dbScoreN3TF,m_dbScoreN4TF;
+	double  m_RefTF,m_CanTF;//
+
+	double    m_dbSimCos;  //similar cosine
 };
 

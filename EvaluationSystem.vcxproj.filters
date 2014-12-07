@@ -93,6 +93,9 @@
     <ClInclude Include="alglib\stdafx.h">
       <Filter>alglib</Filter>
     </ClInclude>
+    <ClInclude Include="Similarity.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EvaluationSystem.cpp">
@@ -148,6 +151,9 @@
     </ClCompile>
     <ClCompile Include="alglib\statistics.cpp">
       <Filter>alglib</Filter>
+    </ClCompile>
+    <ClCompile Include="Similarity.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

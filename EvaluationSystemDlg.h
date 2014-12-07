@@ -60,29 +60,11 @@ public:
 	afx_msg void OnBnClickedCheckSegmentation();
 	afx_msg void OnBnClickedBtnBulk();
 	BOOL m_bSegment;
-	CString m_strScoreOR1;
-	CString m_strScoreSR1;
-	CString m_strScoreOR2;
-	CString m_strScoreSR2;
-	CString m_strScoreOR3;
-	CString m_strScoreSR3;
-	CString m_strScoreORL;
-	CString m_strScoreSRL;
-	CString m_strScoreORNPL;
-	CString m_strScoreSRNPL;
-	CString m_strScoreORW;
-	CString m_strScoreSRW;
-	CString m_strScoreORS;
-	CString m_strScoreSRS;
-	CString m_strScoreORSU;
-	CString m_strScoreSRSU;
-	CString m_str2gramO;
-	CString m_str2gramS;
-	CString m_str3gramO;
-	CString m_str3gramS;
-	CString m_str4gramO;
-	CString m_str4gramS;
-
+	CString m_strScoreOR1, m_strScoreSR1, m_strScoreOR2, m_strScoreSR2, m_strScoreOR3, m_strScoreSR3;
+	CString m_strScoreORL, m_strScoreSRL, m_strScoreORNPL, m_strScoreSRNPL, m_strScoreORW, m_strScoreSRW;
+	CString m_strScoreORS, m_strScoreSRS, m_strScoreORSU, m_strScoreSRSU;
+	CString m_str2gramO, m_str2gramS, m_str3gramO, m_str3gramS, m_str4gramO, m_str4gramS;
+	CString m_strRLO, m_strRLS, m_strRNPLO, m_strRNPLS, m_strRWO, m_strRWS;
 
 	double  m_dbRaw[8];
 	double  m_dbSeg[8];
